@@ -3,20 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/bck_dark_gradient"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    style="@style/GeneralConfiguration">
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_gravity="center_vertical"
+        android:layout_marginTop="10dp"
         android:text="@string/driving_activity_title"
         android:textColor="@android:color/white"
         android:textSize="30sp"
@@ -29,29 +26,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <Button
             android:id="@+id/driving_mode_back"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/back_white_rad"
-            android:text="Menu"
             android:layout_marginEnd="5dp"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:backgroundTint="@android:color/white"
+            android:text="Menu"
+            android:textColor="@color/colorPrimaryDark" />
 
         <Button
             android:id="@+id/driving_mode_type"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/back_orange_rad"
+            android:padding="15dp"
+            android:backgroundTint="@color/colorOrangeSalle"
             android:text="Mode"
-            android:textColor="@color/colorPrimaryDark"
-            />
+            android:textColor="@color/colorPrimaryDark" />
 
     </LinearLayout>
 
@@ -75,8 +73,8 @@
         android:id="@+id/linearLayout7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginBottom="10dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -120,44 +118,39 @@
 
         <Button
             android:id="@+id/btnBus"
+            style="@style/SpeedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/back_white_rad"
-            android:padding="5dp"
             android:text="Bus" />
 
         <Button
             android:id="@+id/btnSlow"
+            style="@style/SpeedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:background="@drawable/back_white_rad"
-            android:padding="5dp"
             android:text="Slow" />
 
         <Button
             android:id="@+id/btnNormal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/back_white_rad"
-            android:padding="5dp"
-            android:text="Normal" />
-
-        <Button
-            android:id="@+id/btnFast"
+            style="@style/SpeedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
-            android:background="@drawable/back_white_rad"
-            android:padding="5dp"
+            android:text="Normal" />
+
+        <Button
+            android:id="@+id/btnFast"
+            style="@style/SpeedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
             android:text="Fast" />
 
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
