@@ -1,6 +1,7 @@
 package com.salle.projects.lsmakerappv2.view.ui;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.salle.projects.lsmakerappv2.R;
 import com.salle.projects.lsmakerappv2.view.callbacks.ScanItemCallback;
 
@@ -19,6 +21,9 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     private Button btnScan, btnConnect, btnFilter;
     private RecyclerView mRecyclerView;
     private TextView tvDeviceName;
+
+    private CharSequence[] mFilterItems = new CharSequence[]{"lsmaker"};
+    private boolean[] mCheckedFilterItems = new boolean[]{false};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +64,32 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             }
         });
 
+    }
+
+    private void displayFilterDialog() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
+                .setTitle("Filter By Devices Name")
+                .setIcon(getResources().getDrawable(R.drawable.ic_filter, null))
+                //.setBackground(getResources().getDrawable(R.drawable.back_white_rad, null))
+                .setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setMultiChoiceItems(mFilterItems, mCheckedFilterItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+
+                    }
+                });
+        builder.show();
     }
 
     /*****************************************************************************
