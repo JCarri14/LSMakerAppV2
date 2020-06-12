@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <Button
-            android:id="@+id/driving_mode_back"
+            android:id="@+id/activity_driving_back"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
@@ -42,7 +42,7 @@
             android:textColor="@color/colorPrimaryDark" />
 
         <Button
-            android:id="@+id/driving_mode_type"
+            android:id="@+id/activity_driving_mode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -54,7 +54,7 @@
     </LinearLayout>
 
     <io.github.controlwear.virtual.joystick.android.JoystickView
-        android:id="@+id/joystickView"
+        android:id="@+id/activity_driving_joystick"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         app:JV_backgroundColor="@color/colorPrimaryDark"
@@ -88,7 +88,7 @@
             android:textSize="25sp" />
 
         <com.warkiz.widget.IndicatorSeekBar
-            android:id="@+id/indicatorSeekBar"
+            android:id="@+id/activity_driving_seekBar"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@drawable/back_white_rad"
@@ -117,7 +117,7 @@
         tools:layout_editor_absoluteX="16dp">
 
         <Button
-            android:id="@+id/btnBus"
+            android:id="@+id/activity_driving_slowest_btn"
             style="@style/SpeedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
             android:text="Bus" />
 
         <Button
-            android:id="@+id/btnSlow"
+            android:id="@+id/activity_driving_slow_btn"
             style="@style/SpeedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
             android:text="Slow" />
 
         <Button
-            android:id="@+id/btnNormal"
+            android:id="@+id/activity_driving_normal_btn"
             style="@style/SpeedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -143,7 +143,7 @@
             android:text="Normal" />
 
         <Button
-            android:id="@+id/btnFast"
+            android:id="@+id/activity_driving_fast_btn"
             style="@style/SpeedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
