@@ -9,12 +9,14 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.salle.projects.lsmakerappv2.R;
 import com.salle.projects.lsmakerappv2.view.callbacks.ScanItemCallback;
+import com.salle.projects.lsmakerappv2.viewmodel.ScanViewModel;
 
 public class ScanActivity extends AppCompatActivity implements ScanItemCallback {
 
@@ -25,11 +27,14 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     private CharSequence[] mFilterItems = new CharSequence[]{"lsmaker"};
     private boolean[] mCheckedFilterItems = new boolean[]{false};
 
+    private ScanViewModel mViewModel;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         initViews();
+        initViewModel();
     }
 
     private void initViews() {
@@ -60,9 +65,14 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                displayFilterDialog();
             }
         });
+
+    }
+
+    private void initViewModel() {
+        mViewModel = new ViewModelProvider(this).get(ScanViewModel.class);
 
     }
 
