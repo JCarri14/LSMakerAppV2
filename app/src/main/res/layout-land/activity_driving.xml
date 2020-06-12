@@ -6,16 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bck_dark_gradient"
-    style="@style/GeneralConfiguration">
+    style="@style/GeneralConfiguration"
+    tools:ignore="MissingDefaultResource">
 
     <LinearLayout
         android:id="@+id/linearLayout10"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -148,20 +149,6 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:rotation="-90"
-        android:visibility="gone"
-        android:scaleX="7"
-        android:scaleY="7"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_phone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout10"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <io.github.controlwear.virtual.joystick.android.JoystickView
         android:id="@+id/joystickView"
         android:layout_width="300dp"
@@ -172,9 +159,9 @@
         app:JV_buttonColor="@color/colorSalle"
         app:JV_buttonSizeRatio="33%"
         app:JV_fixedCenter="false"
-        android:layout_marginEnd="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout10"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
