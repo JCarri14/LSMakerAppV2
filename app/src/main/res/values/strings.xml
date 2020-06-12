@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LSMaker Companion - La Salle</string>
+    <string name="app_name">LSMaker Companion \n La Salle</string>
 
     <!-- Strings related to login -->
     <string name="connection_activity_title">Connection</string>
@@ -33,7 +33,7 @@
     <string name="navigation_drawer_open">Open navigation menu</string>
     <string name="navigation_drawer_close">Close navigation menu</string>
     <string name="action_settings">Configuration</string>
-    <strign name="action_filter">Filter</strign>
+    <string name="action_filter">Filter</string>
     <string name="menu_driving_mode">Driving mode</string>
     <string name="configuration_menu_title">Configuration</string>
     <string name="configuration_label">Configuration</string>
