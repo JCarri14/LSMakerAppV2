@@ -9,7 +9,7 @@
     <string name="connection_state_disconnected">Desconnectat</string>
 
     <string name="hint_device_name">Nom del dispositiu</string>
-    <string name="hint_device_name_alt">-------</string>
+    <string name="hint_device_name_alt">&lt;cap dispositiu&gt;</string>
     <string name="hint_pin">Pin</string>
     <string name="action_sign_in">Connecta amb el dispositiu</string>
     <string name="action_sign_in_short">Connecta</string>
@@ -71,5 +71,7 @@
     <string name="connection_scan_button_text">Escaneja</string>
     <string name="bluetooth_not_enabled_toast">Sense Bluetooth, l\'aplicació no pot funcionar</string>
     <string name="bluetooth_enabled_toast">S\'ha encès el Bluetooth</string>
+    <string name="driving_action_stop">Aturar</string>
+    <string name="action_filter">Filtrar</string>
 
 </resources>

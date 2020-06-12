@@ -27,6 +27,7 @@
     <string name="driving_activity_title">Driving mode</string>
     <string name="driving_action">Drive</string>
     <string name="driving_action_start">Start</string>
+    <string name="driving_action_stop">Stop</string>
 
     <string name="driving_speed_title">Speed</string>
 

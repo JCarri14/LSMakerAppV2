@@ -11,7 +11,7 @@
 
 
     <string name="hint_device_name">Nombre del dispositivo</string>
-    <string name="hint_device_name_alt">-------</string>
+    <string name="hint_device_name_alt">&lt;ningun dispositivo&gt;</string>
     <string name="hint_pin">Pin</string>
     <string name="action_sign_in">Conecta con el dispositivo</string>
     <string name="action_sign_in_short">Conecta</string>
@@ -72,6 +72,8 @@
     <string name="connection_scan_button_text">Escanear</string>
     <string name="bluetooth_not_enabled_toast">Sin Bluetooth, la aplicación no puede funcionar</string>
     <string name="bluetooth_enabled_toast">se ha encendido el Bluetooth</string>
+    <string name="driving_action_stop">Parar</string>
+    <string name="action_filter">Filtrar</string>
 
 
 </resources>
