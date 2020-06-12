@@ -1,5 +1,6 @@
 package com.salle.projects.lsmakerappv2.view.ui;
 
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,8 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.projects.lsmakerappv2.R;
+import com.salle.projects.lsmakerappv2.view.callbacks.ScanItemCallback;
 
-public class ScanActivity extends AppCompatActivity {
+public class ScanActivity extends AppCompatActivity implements ScanItemCallback {
 
     private Button btnScan, btnConnect, btnFilter;
     private RecyclerView mRecyclerView;
@@ -59,4 +61,16 @@ public class ScanActivity extends AppCompatActivity {
 
     }
 
+    /*****************************************************************************
+     * **************************  SCAN ITEM CALLBACK  **************************/
+
+     @Override
+    public void onItemClick(int index) {
+
+    }
+
+    @Override
+    public void onItemClick(Object obj) {
+
+    }
 }
