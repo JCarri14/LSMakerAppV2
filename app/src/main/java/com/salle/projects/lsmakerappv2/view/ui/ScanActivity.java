@@ -6,7 +6,10 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,20 +28,26 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.salle.projects.lsmakerappv2.R;
 import com.salle.projects.lsmakerappv2.bluetooth.BluetoothService;
+import com.salle.projects.lsmakerappv2.model.BtDevice;
 import com.salle.projects.lsmakerappv2.view.adapters.ScanItemAdapter;
 import com.salle.projects.lsmakerappv2.view.callbacks.ScanItemCallback;
 import com.salle.projects.lsmakerappv2.viewmodel.ScanViewModel;
 
+import java.util.List;
+
 public class ScanActivity extends AppCompatActivity implements ScanItemCallback {
 
+    // UI
     private Button btnScan, btnConnect, btnFilter;
     private RecyclerView mRecyclerView;
     private ScanItemAdapter mItemAdapter;
     private TextView tvDeviceName;
 
+    // Filter Dialog
     private CharSequence[] mFilterItems = new CharSequence[]{"lsmaker"};
     private boolean[] mCheckedFilterItems = new boolean[]{false};
 
+    // ViewModel
     private ScanViewModel mViewModel;
 
     // Bluetooth
@@ -100,7 +110,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startScanning();
             }
         });
 
@@ -124,11 +134,16 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this).get(ScanViewModel.class);
-
+        mViewModel.getBluetoothDevices().observe(this, btDevices -> {
+            if (mRecyclerView != null) {
+                mItemAdapter = new ScanItemAdapter(ScanActivity.this, btDevices);
+                mRecyclerView.setAdapter(mItemAdapter);
+            }
+        });
     }
 
     private void service_init() {
-        mBluetoothService.service_init(this);
+        mBluetoothService.service_init(this, mViewModel);
     }
 
     private void bluetoothCompatibility() {
@@ -151,8 +166,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
             mRecyclerView = (RecyclerView) findViewById(R.id.scanning_recyclerView);
             if (mRecyclerView != null) {
-                mItemAdapter = new ScanItemAdapter(this,
-                        mBluetoothService.getDeviceList(), mBluetoothService.getDevRssiValues());
+                mItemAdapter = new ScanItemAdapter(this, null);
                 LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
                 mRecyclerView.setLayoutManager(manager);
                 mRecyclerView.setAdapter(mItemAdapter);
@@ -161,9 +175,14 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         //registerReceiver(scanningReceiver, intentFilter);
     }
 
-    public void startScanning(View view) {
+    public void startScanning() {
         mBluetoothService.startScanningDevices();
-        showProgress(true);
+        showProgress(false);
+    }
+
+    private void goToDrivingActivity() {
+        final Intent intent = new Intent(this, DriveActivity.class);
+        startActivity(intent);
     }
 
     private void displayFilterDialog() {
@@ -190,14 +209,6 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
                     }
                 });
         builder.show();
-    }
-
-    public void notifyDataSetChanged() {
-        if (mRecyclerView != null) {
-            mItemAdapter = new ScanItemAdapter(this,
-                    mBluetoothService.getDeviceList(), mBluetoothService.getDevRssiValues());
-            mRecyclerView.setAdapter(mItemAdapter);
-        }
     }
 
     /*****************************************************************************
@@ -239,11 +250,11 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
      * and the app will close.
      */
     private void showBluetoothNoCompatiblePopUp() {
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.bluetooth_not_compatible_title))
-            .setIcon(getResources().getDrawable(R.drawable.ic_alert, null))
-            .setMessage(R.string.bluetooth_not_compatible_message)
-            .setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle(getString(R.string.bluetooth_not_compatible_title));
+        builder.setIcon(getResources().getDrawable(R.drawable.ic_alert, null));
+        builder.setMessage(R.string.bluetooth_not_compatible_message);
+        builder.setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 finish();
             }
@@ -302,4 +313,47 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     public void onItemClick(Object obj) {
 
     }
+
+    /*****************************************************************************
+     * ***********************  CONNECTION INNER CLASS  **************************/
+
+    /**
+     * Represents an asynchronous binding task used to connect the user with the bluetooth device.
+     *
+     */
+    public class BluetoothConnectionTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final BluetoothDevice device;
+        private final Context context;
+
+        BluetoothConnectionTask(BluetoothDevice device, Context context) {
+            this.device = device;
+            this.context = context;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return mBluetoothService.connect(device, context);
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            //mAuthTask = null;
+            showProgress(false);
+
+            if (success) {
+                goToDrivingActivity();
+            } else {
+                showConnectionErrorPopUp(getString(R.string.connection_error_message));
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            //mAuthTask = null;
+            showProgress(false);
+        }
+    }
+
+
 }
