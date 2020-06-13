@@ -74,6 +74,8 @@
     <string name="bluetooth_enabled_toast">se ha encendido el Bluetooth</string>
     <string name="driving_action_stop">Parar</string>
     <string name="action_filter">Filtrar</string>
+    <string name="bluetooth_state_scanning">Escaneando...</string>
+    <string name="bluetooth_state_stop_scan">Escaneo terminado</string>
 
 
 </resources>

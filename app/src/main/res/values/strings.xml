@@ -71,5 +71,7 @@
     <string name="connection_scan_button_text">Scan</string>
     <string name="bluetooth_not_enabled_toast">This app can\'t work without Bluetooth enabled</string>
     <string name="bluetooth_enabled_toast">Bluetooth enabled</string>
+    <string name="bluetooth_state_scanning">Scanning...</string>
+    <string name="bluetooth_state_stop_scan">Scanning finished</string>
 
 </resources>

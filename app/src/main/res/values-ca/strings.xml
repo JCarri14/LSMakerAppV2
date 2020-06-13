@@ -73,5 +73,7 @@
     <string name="bluetooth_enabled_toast">S\'ha encès el Bluetooth</string>
     <string name="driving_action_stop">Aturar</string>
     <string name="action_filter">Filtrar</string>
+    <string name="bluetooth_state_scanning">Escanejant...</string>
+    <string name="bluetooth_state_stop_scan">Escaneig finalitzat</string>
 
 </resources>
