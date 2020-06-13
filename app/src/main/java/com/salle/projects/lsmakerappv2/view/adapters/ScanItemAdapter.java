@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.projects.lsmakerappv2.R;
+import com.salle.projects.lsmakerappv2.model.BtDevice;
 import com.salle.projects.lsmakerappv2.view.callbacks.ScanItemCallback;
 import com.salle.projects.lsmakerappv2.view.ui.ScanActivity;
 
@@ -23,14 +24,12 @@ implements AdapterView.OnItemClickListener {
 
     private static final String TAG = ScanItemAdapter.class.getName();
 
-    private List<BluetoothDevice> mDevices;
-    private Map<String, Integer> mRssiValues;
+    private List<BtDevice> mDevices;
     private ScanItemCallback mCallback;
 
 
-    public ScanItemAdapter(ScanItemCallback callback, List<BluetoothDevice> devices, Map<String, Integer> rssiValues ) {
+    public ScanItemAdapter(ScanItemCallback callback, List<BtDevice> devices) {
         mDevices = devices;
-        mRssiValues = rssiValues;
         mCallback = callback;
     }
 
@@ -49,7 +48,7 @@ implements AdapterView.OnItemClickListener {
             name.append(mDevices.get(position).getName());
             holder.tvName.setText(name);
             holder.tvAddress.setText(mDevices.get(position).getAddress());
-            byte rssival = (byte) mRssiValues.get(mDevices.get(position).getAddress()).intValue();
+            byte rssival = mDevices.get(position).getRssiValue().byteValue();
             if (rssival != 0) {
                 StringBuilder text =new StringBuilder("Rssi = ").append(String.valueOf(rssival));
                 holder.tvRssi.setText(text);
@@ -64,7 +63,7 @@ implements AdapterView.OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        BluetoothDevice device = mDevices.get(position);
+        BtDevice device = mDevices.get(position);
         mCallback.onItemClick(device);
     }
 
