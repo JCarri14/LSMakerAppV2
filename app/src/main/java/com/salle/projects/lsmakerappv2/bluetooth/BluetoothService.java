@@ -1,11 +1,8 @@
 package com.salle.projects.lsmakerappv2.bluetooth;
 
 import android.app.Activity;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -21,20 +18,12 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.BaseAdapter;
-
-import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModel;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.salle.projects.lsmakerappv2.bluetooth.callbacks.BtDiscoveryCallback;
-import com.salle.projects.lsmakerappv2.utils.BluetoothDeviceComparator;
 import com.salle.projects.lsmakerappv2.utils.Utils;
-import com.salle.projects.lsmakerappv2.view.ui.ScanActivity;
-import com.salle.projects.lsmakerappv2.viewmodel.ScanViewModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
