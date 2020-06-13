@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.salle.projects.lsmakerappv2.R;
+import com.salle.projects.lsmakerappv2.view.adapters.ScanItemAdapter;
 import com.salle.projects.lsmakerappv2.view.callbacks.ScanItemCallback;
 import com.salle.projects.lsmakerappv2.viewmodel.ScanViewModel;
 
@@ -22,6 +23,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     private Button btnScan, btnConnect, btnFilter;
     private RecyclerView mRecyclerView;
+    private ScanItemAdapter mItemAdapter;
     private TextView tvDeviceName;
 
     private CharSequence[] mFilterItems = new CharSequence[]{"lsmaker"};
@@ -102,9 +104,12 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         builder.show();
     }
 
+    public void notifyDataSetChanged() {
+        mItemAdapter.notifyDataSetChanged();
+    }
+
     /*****************************************************************************
      * **************************  SCAN ITEM CALLBACK  **************************/
-
      @Override
     public void onItemClick(int index) {
 
