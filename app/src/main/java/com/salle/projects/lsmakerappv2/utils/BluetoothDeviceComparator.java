@@ -1,6 +1,6 @@
 package com.salle.projects.lsmakerappv2.utils;
 
-import android.bluetooth.BluetoothDevice;
+import com.salle.projects.lsmakerappv2.model.BtDevice;
 
 import java.util.Comparator;
 
@@ -12,10 +12,10 @@ import java.util.Comparator;
  * @author Eduard de Torres
  * @version 1.0.0
  */
-public class BluetoothDeviceComparator implements Comparator<BluetoothDevice> {
+public class BluetoothDeviceComparator implements Comparator<BtDevice> {
 
     @Override
-    public int compare(BluetoothDevice lhs, BluetoothDevice rhs) {
+    public int compare(BtDevice lhs, BtDevice rhs) {
         if (lhs == null) {
             if (rhs == null) {
                 // Both devices are equal as the are null references.
