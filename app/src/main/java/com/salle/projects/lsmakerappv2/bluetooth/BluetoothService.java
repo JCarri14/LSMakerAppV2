@@ -17,17 +17,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.BaseAdapter;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModel;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.salle.projects.lsmakerappv2.bluetooth.callbacks.BtDiscoveryCallback;
 import com.salle.projects.lsmakerappv2.utils.BluetoothDeviceComparator;
 import com.salle.projects.lsmakerappv2.utils.Utils;
 import com.salle.projects.lsmakerappv2.view.ui.ScanActivity;
+import com.salle.projects.lsmakerappv2.viewmodel.ScanViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +52,6 @@ public class BluetoothService {
     private final int UART_PROFILE_DISCONNECTED = 21;
 
     // Own attributes
-    private ScanActivity deviceAdapter;
     private boolean serviceStarted = false;
     private Activity binderActivity = null;
 
@@ -64,23 +67,16 @@ public class BluetoothService {
     // UART service connected/disconnected
     private ServiceConnection mServiceConnection;
 
-    private final ScanCallback mLeScanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            super.onScanResult(callbackType, result);
-            //Log.d(TAG, "Device found: "+ device.getName());
-            addDevice(result.getDevice(),result.getRssi());
-            deviceAdapter.notifyDataSetChanged();
-        }
+    // Bluetooth Device Discovery Callback
+    private BtDiscoveryCallback mCallback;
 
+    // Bluetooth Device Discovery Handlers
+    private ScanCallback mScanCallback;
+    private final BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
-        public void onBatchScanResults(List<ScanResult> results) {
-            super.onBatchScanResults(results);
-        }
-
-        @Override
-        public void onScanFailed(int errorCode) {
-            super.onScanFailed(errorCode);
+        public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
+            Log.d(TAG, "Device found: "+ device.getName());
+            mCallback.onDeviceDiscovered(device, rssi);
         }
     };
 
@@ -179,7 +175,11 @@ public class BluetoothService {
 
         Log.d(TAG, "... device.address==" + mDevice + "mserviceValue" + uartService);
         if (uartService.connect(deviceAddress)) {
-            mBluetoothAdapter.getBluetoothLeScanner().stopScan(mLeScanCallback);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mBluetoothAdapter.getBluetoothLeScanner().stopScan(mScanCallback);
+            } else {
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            }
             return true;
         } else {
             return false;
@@ -280,58 +280,39 @@ public class BluetoothService {
      * @param enable true to start a scanning process, false to stop it.
      */
     private void scanLeDevice(final boolean enable) {
-
-        final BluetoothLeScanner bluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
-
         //Log.d(TAG, "Scan Le Device: "+ enable);
-        if (enable) {
-            // Stops scanning after a pre-defined scan period.
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    bluetoothLeScanner.stopScan(mLeScanCallback);
-                    //mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                    Intent intent = new Intent(SCAN_STOPPED);
-                    binderActivity.sendBroadcast(intent);
-                }
-            }, SCAN_PERIOD);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final BluetoothLeScanner bluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
 
-            bluetoothLeScanner.startScan(mLeScanCallback);
-            //mBluetoothAdapter.startLeScan(mLeScanCallback);
+            if (enable) {
+                // Stops scanning after a pre-defined scan period.
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        bluetoothLeScanner.stopScan(mScanCallback);
+                    }
+                }, SCAN_PERIOD);
+                bluetoothLeScanner.startScan(mScanCallback);
+            } else {
+                bluetoothLeScanner.stopScan(mScanCallback);
+            }
+
         } else {
-            bluetoothLeScanner.stopScan(mLeScanCallback);
-            //mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            Intent intent = new Intent(SCAN_STOPPED);
-            binderActivity.sendBroadcast(intent);
-        }
+            if (enable) {
+                // Stops scanning after a pre-defined scan period.
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    }
+                }, SCAN_PERIOD);
 
-    }
-
-    /**
-     * Method that adds a device to the current device list.
-     *
-     * @param device discovered device
-     * @param rssi rssi value of discovered device
-     */
-    private void addDevice(BluetoothDevice device, int rssi) {
-        boolean deviceFound = false;
-
-        for (BluetoothDevice listDev : deviceList) {
-            if (listDev.getAddress().equals(device.getAddress())) {
-                deviceFound = true;
-                break;
+                mBluetoothAdapter.startLeScan(mLeScanCallback);
+            } else {
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
             }
         }
 
-        devRssiValues.put(device.getAddress(), rssi);
-        if (!deviceFound) {
-            deviceList.add(device);
-            Collections.sort(deviceList, new BluetoothDeviceComparator());
-            devRssiValues.put(device.getAddress(), rssi);
-            if (deviceAdapter != null) {
-                deviceAdapter.notifyDataSetChanged();
-            }
-        }
     }
 
     /**
@@ -343,12 +324,33 @@ public class BluetoothService {
      * @param binderActivity activity that first calls the service. This activity must not be
      *                       destroye while the service is working.
      */
-    public void service_init(Activity binderActivity) {
-        binderActivity = binderActivity;
-        deviceAdapter = (ScanActivity)binderActivity;
+    public void service_init(Activity binderActivity, BtDiscoveryCallback callback) {
+        this.binderActivity = binderActivity;
+        this.mCallback = callback;
         initialize(binderActivity);
         Intent bindIntent = new Intent(binderActivity, UartService.class);
         binderActivity.bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mScanCallback = new ScanCallback() {
+                @Override
+                public void onScanResult(int callbackType, ScanResult result) {
+                    super.onScanResult(callbackType, result);
+                    Log.d(TAG, "Device found: "+ result.getDevice().getName());
+                    mCallback.onDeviceDiscovered(result.getDevice(), result.getRssi());
+                }
+
+                @Override
+                public void onBatchScanResults(List<ScanResult> results) {
+                    super.onBatchScanResults(results);
+                }
+
+                @Override
+                public void onScanFailed(int errorCode) {
+                    super.onScanFailed(errorCode);
+                }
+            };
+        }
 
         LocalBroadcastManager.getInstance(binderActivity).registerReceiver(UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
         serviceStarted = true;
@@ -383,63 +385,4 @@ public class BluetoothService {
         intentFilter.addAction(UartService.DEVICE_DOES_NOT_SUPPORT_UART);
         return intentFilter;
     }
-
-
-    /*
-     * Getters and setters
-     */
-
-    /**
-     * Method that returns the name of the current binded bluetooth device.
-     *
-     * @return the name of the current binded device. May be null if the device doesn't have a name.
-     */
-    public String getBluetoothDeviceName() {
-        if (mDevice == null) {
-            return null;
-        }
-        return mDevice.getName();
-    }
-
-    /**
-     * Method that returns the physical address of the current binded bluetooth device.
-     *
-     * @return the physical address of the current binded device. May not be unique, as the
-     * manufacturer sets its value of factory (2^48 combinations)
-     */
-    public String getBluetoothDeviceAddress() {
-        if (mDevice == null) {
-            return null;
-        }
-        return mDevice.getAddress();
-    }
-
-    /**
-     * Method that returns a list of all current discovered bluetooth devices.
-     * @return a list of all current discovered devices
-     */
-    public List<BluetoothDevice> getDeviceList() {
-        return deviceList;
-    }
-
-    /**
-     * Method that returns a {@link Map} containing a list of all the current discovered devices'
-     * rssi values. The {@link Map} contains a list of pairs Address / RSSI value.
-     *
-     * @return a list of rssi values from all the discovered devices
-     */
-    public Map<String, Integer> getDevRssiValues() {
-        return devRssiValues;
-    }
-
-    /**
-     * Method that configures the adapter that will manage the device's list to let the service
-     * notify any change on its members.
-     *
-     * @param deviceAdapter an adapter to manage the device's list
-     */
-    public static void setDeviceAdapter(ScanActivity deviceAdapter) {
-        deviceAdapter = deviceAdapter;
-    }
-
 }
