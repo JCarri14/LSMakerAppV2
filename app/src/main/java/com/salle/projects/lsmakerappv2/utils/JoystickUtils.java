@@ -9,9 +9,11 @@ public class JoystickUtils {
     public static int getDirectionFromParams(int angle, int strength) {
         Log.d(TAG, "Angle: " + angle + ", Strength: " + strength);
         if (isRightTurn(angle)) {
+            Log.d(TAG, "RIGHT");
             return getRightTurnValue(angle, strength);
         } else {
             if (isLeftTurn(angle)) {
+                Log.d(TAG, "LEFT");
                 return -getLeftTurnValue(angle, strength);
             }
         }
@@ -31,24 +33,23 @@ public class JoystickUtils {
             angle = ((angle * (-100))/90)+100;
         } else {
             angle = 360-angle; // MIN Value would be 271 and MAX value 359;
-            angle = ((angle * (-100))/90)+100;
         }
-        angle = (1-(strength/90))*30;
-        return angle;
+        int res = (angle * (-100)/90)+100;
+        res = (1-(strength/90))*30;
+        return res;
     }
 
     private static int getLeftTurnValue(int angle, int strength) {
         if (angle < 180) {
             // We want to be always working with values between 0 and 90;
             angle = 180 - angle;
-            angle = ((angle * (-100))/90)+100;
         } else {
             // Knowing that the Min value at this case would be 180 and because an angle of 0
             // would mean 100% of that direction...
             angle = angle-180;
-            angle = ((angle * (-100))/90)+100;
         }
-        angle = (1-(strength/90))*25;
-        return angle;
+        int res = ((angle * (-100))/90)+100;
+        res = (1-(strength/90))*25;
+        return res;
     }
 }
