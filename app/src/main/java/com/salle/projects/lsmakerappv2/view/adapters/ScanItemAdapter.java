@@ -27,7 +27,7 @@ implements AdapterView.OnItemClickListener {
     private static final String TAG = ScanItemAdapter.class.getName();
 
     private List<BtDevice> mDevices;
-    private int currentItem;
+    private int currentItem = -1;
     private ScanItemCallback mCallback;
     private Context mContext;
 
@@ -57,15 +57,26 @@ implements AdapterView.OnItemClickListener {
                 public void onClick(View view) {
                     if (position != currentItem) {
                         currentItem = position;
+                    } else {
+                        currentItem = -1;
                     }
+                    notifyDataSetChanged();
                 }
             });
             if (currentItem == position) {
                 Drawable d;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    d = mContext.getDrawable(R.drawable.back_orange_rad);
+                    d = mContext.getDrawable(R.drawable.back_green_rad);
                 } else {
-                    d = ContextCompat.getDrawable(mContext, R.drawable.back_orange_rad);
+                    d = ContextCompat.getDrawable(mContext, R.drawable.back_green_rad);
+                }
+                holder.itemView.setBackground(d);
+            } else {
+                Drawable d;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    d = mContext.getDrawable(R.drawable.back_white_rad);
+                } else {
+                    d = ContextCompat.getDrawable(mContext, R.drawable.back_white_rad);
                 }
                 holder.itemView.setBackground(d);
             }
