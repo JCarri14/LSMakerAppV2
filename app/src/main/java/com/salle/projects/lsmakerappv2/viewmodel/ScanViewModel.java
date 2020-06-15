@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class ScanViewModel extends ViewModel implements BtDiscoveryCallback {
 
-    private final String DEFAULT_FILTER_VALUE = "None";
+    public final String DEFAULT_FILTER_VALUE = "None";
 
     private MutableLiveData<List<BtDevice>> mDevices;
     private List<BtDevice> mAllDevices;
@@ -74,6 +74,10 @@ public class ScanViewModel extends ViewModel implements BtDiscoveryCallback {
     }
 
     private void updateObservableList() {
+        if (mDevices == null) {
+            mDevices = new MutableLiveData<List<BtDevice>>();
+            mDevices.setValue(new ArrayList<>());
+        }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             if (!filter.equals(DEFAULT_FILTER_VALUE)) {
                 mDevices.setValue(mAllDevices.stream().filter(d -> d.getName().contains(filter)).collect(Collectors.toList()));
@@ -92,8 +96,13 @@ public class ScanViewModel extends ViewModel implements BtDiscoveryCallback {
         }
     }
 
+    public String getFilter() {
+        return filter;
+    }
+
     public void setFilter(String newFilter) {
         this.filter = newFilter;
+        updateObservableList();
     }
 
 }
