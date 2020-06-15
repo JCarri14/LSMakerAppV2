@@ -22,7 +22,7 @@
     <string name="connection_error_title">Connection error</string>
     <string name="pop_up_accept">Accept</string>
     <string name="pop_up_close">Close</string>
-    <string name="connection_error_message">Couldn\'t connect with the device</string>
+    <string name="connection_error_message">Couldn\'t connect to the device</string>
 
     <!-- Strings related to driving -->
     <string name="driving_activity_title">Driving mode</string>

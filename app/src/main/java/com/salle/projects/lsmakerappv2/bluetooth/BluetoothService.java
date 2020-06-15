@@ -147,7 +147,6 @@ public class BluetoothService {
         };
     }
 
-
     /**
      * Method that binds the smartphone to a bluetooth device.
      *
@@ -206,7 +205,6 @@ public class BluetoothService {
         }
         return true;
     }
-
 
     /**
      * Method that checks if the current smartphone is compatible with the Bluetooth Low Energy (BLE)
