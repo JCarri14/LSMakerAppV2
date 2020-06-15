@@ -2,9 +2,9 @@ package com.salle.projects.lsmakerappv2.utils;
 
 import android.util.Log;
 
-public class JoystickManager {
+public class JoystickUtils {
 
-    private static final String TAG = JoystickManager.class.getName();
+    private static final String TAG = JoystickUtils.class.getName();
 
     public static int getDirectionFromParams(int angle, int strength) {
         Log.d(TAG, "Angle: " + angle + ", Strength: " + strength);
@@ -12,7 +12,7 @@ public class JoystickManager {
             return getRightTurnValue(angle, strength);
         } else {
             if (isLeftTurn(angle)) {
-                return getLeftTurnValue(angle, strength);
+                return -getLeftTurnValue(angle, strength);
             }
         }
         return 0;

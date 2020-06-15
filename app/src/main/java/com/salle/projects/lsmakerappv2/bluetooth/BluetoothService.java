@@ -21,6 +21,7 @@ import android.util.Log;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.salle.projects.lsmakerappv2.bluetooth.callbacks.BtDiscoveryCallback;
+import com.salle.projects.lsmakerappv2.services.UartService;
 import com.salle.projects.lsmakerappv2.utils.Utils;
 
 import java.util.ArrayList;
@@ -47,11 +48,13 @@ public class BluetoothService {
     // Bluetooth attributes
     private List<BluetoothDevice> deviceList;
     private Map<String, Integer> devRssiValues;
-    private BluetoothDevice mDevice = null;
     private UartService uartService = null;
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter = null;
     private int mState = UART_PROFILE_DISCONNECTED;
+
+    // Device to connect
+    private BluetoothDevice mDevice = null;
 
     // UART service connected/disconnected
     private ServiceConnection mServiceConnection;
