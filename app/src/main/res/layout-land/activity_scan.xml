@@ -8,16 +8,19 @@
     style="@style/GeneralConfiguration">
 
     <LinearLayout
+        android:id="@+id/linearLayout11"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_weight="4"
             android:layout_height="match_parent"
-            android:padding="30dp"
-            android:orientation="vertical">
+            android:layout_weight="4"
+            android:orientation="vertical"
+            android:padding="30dp">
 
 
             <LinearLayout
@@ -48,7 +51,7 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/scanning_device_name"
+                        android:id="@+id/activity_scan_device_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -60,31 +63,31 @@
 
 
                 <Button
-                    android:id="@+id/scanning_connect_btn"
+                    android:id="@+id/activity_scan_connect_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/connection_action"
-                    android:padding="10dp"
                     android:backgroundTint="@color/colorConnected"
+                    android:padding="10dp"
+                    android:text="@string/connection_action"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    android:id="@+id/scanning_scan_btn"
+                    android:id="@+id/activity_scan_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:padding="10dp"
                     android:backgroundTint="@color/colorSalle"
+                    android:padding="10dp"
                     android:text="@string/connection_scan_button_text" />
 
                 <Button
-                    android:id="@+id/scanning_check_btn"
+                    android:id="@+id/activity_scan_filter_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:padding="10dp"
                     android:backgroundTint="@android:color/white"
+                    android:padding="10dp"
                     android:text="@string/action_filter"
                     android:textColor="@color/colorPrimaryDark" />
 
@@ -94,8 +97,8 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="5"
             android:layout_height="match_parent"
+            android:layout_weight="5"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -131,14 +134,22 @@
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/scanning_recyclerView"
+                android:id="@+id/activity_scan_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp" />
 
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/activity_scan_coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="16dp"></android.support.design.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,14 +28,6 @@
             android:textSize="30sp"
             android:textStyle="bold" />
 
-        <ProgressBar
-            android:id="@+id/connection_scanning_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:visibility="gone" />
-
     </RelativeLayout>
 
 
@@ -96,6 +88,7 @@
                 android:id="@+id/activity_main_device"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:layout_marginStart="10dp"
                 android:text="@string/hint_device_name_alt"
                 android:textColor="@android:color/white"

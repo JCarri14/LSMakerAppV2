@@ -231,44 +231,51 @@ public class DriveActivity extends AppCompatActivity {
      * *****************************  MODES SETUP  *******************************/
     @SuppressLint("SourceLockedOrientationActivity")
     private void setOnDeviceRotationMode() {
-        int orientation = getResources().getConfiguration().orientation;
-        if (orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if (!mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
+            int orientation = getResources().getConfiguration().orientation;
+            if (orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
+            // Turn visible the device icon
+            ivIcon = findViewById(R.id.activity_driving_icon);
+            ivIcon.setVisibility(View.VISIBLE);
+
+            // Make invisible the joystick command
+            jvControl.setVisibility(View.GONE);
+
+            // Setting the current control mode
+            mManager.setDataSource(DrivingDataManager.ROTATION_MODE);
+
+            // Accelerometer
+            TiltService.initializeService(this);
+            this.registerReceiver(tiltReceiver, intentFilter);
         }
-        // Turn visible the device icon
-        ivIcon = findViewById(R.id.activity_driving_icon);
-        ivIcon.setVisibility(View.VISIBLE);
-
-        // Make invisible the joystick command
-        jvControl.setVisibility(View.GONE);
-
-        // Setting the current control mode
-        mManager.setDataSource(DrivingDataManager.ROTATION_MODE);
-
-        // Accelerometer
-        TiltService.initializeService(this);
-        this.registerReceiver(tiltReceiver, intentFilter);
     }
 
     private void setOnJoystickMode() {
-        int orientation = getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
-                if (ivIcon != null) {
-                    ivIcon.setVisibility(View.GONE);
-                    // Stopping Service from reading rotation data
-                    TiltService.stopService();
-                    this.unregisterReceiver(tiltReceiver);
+        if (!mManager.getDataSource().equals(DrivingDataManager.JOYSTICK_MODE)) {
+
+            int orientation = getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
+                    if (ivIcon != null) {
+                        ivIcon.setVisibility(View.GONE);
+                        // Stopping Service from reading rotation data
+                        TiltService.stopService();
+                        this.unregisterReceiver(tiltReceiver);
+                    }
                 }
             }
+
+            if (jvControl == null) {
+                jvControl = findViewById(R.id.activity_driving_joystick);
+            }
+            // Make invisible the joystick command
+            jvControl.setVisibility(View.VISIBLE);
+
+            // Setting the current control mode
+            mManager.setDataSource(DrivingDataManager.JOYSTICK_MODE);
         }
-
-        if (jvControl == null) { jvControl = findViewById(R.id.activity_driving_joystick); }
-        // Make invisible the joystick command
-        jvControl.setVisibility(View.VISIBLE);
-
-        // Setting the current control mode
-        mManager.setDataSource(DrivingDataManager.JOYSTICK_MODE);
     }
 
     /** IntentFilter to configure the broadcast receiver */

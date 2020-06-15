@@ -63,6 +63,7 @@
                 android:id="@+id/preferences_device_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:text="@string/hint_device_name_alt"
                 android:textColor="#ffffff" />
         </LinearLayout>
@@ -84,6 +85,7 @@
                 android:id="@+id/preferences_device_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:text="@string/hint_device_name_alt"
                 android:textColor="#ffffff" />
         </LinearLayout>
