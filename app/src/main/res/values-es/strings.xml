@@ -76,6 +76,9 @@
     <string name="action_filter">Filtrar</string>
     <string name="bluetooth_state_scanning">Escaneando...</string>
     <string name="bluetooth_state_stop_scan">Escaneo terminado</string>
+    <string name="bluetooth_disconnection_ok">Desconectado del dispositivo</string>
+    <string name="bluetooth_disconnection_ko">No se ha podido desconectar</string>
+    <string name="action_back">Atrás</string>
 
 
 </resources>

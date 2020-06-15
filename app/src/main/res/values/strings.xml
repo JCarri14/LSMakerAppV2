@@ -11,6 +11,7 @@
     <string name="hint_device_name">Device\'s name</string>
     <string name="hint_device_name_alt">&lt;no device&gt;</string>
     <string name="hint_pin">Pin code</string>
+    <string name="action_back">Back</string>
     <string name="action_sign_in">Connect with the device</string>
     <string name="action_sign_in_short">Connect</string>
     <string name="error_invalid_device_name">The device\'s name is too short</string>
@@ -19,8 +20,8 @@
     <string name="error_incorrect_credentials">Couldn\'t connect to the device, check the fields</string>
     <string name="connecting_message">Connecting, please wait...</string>
     <string name="connection_error_title">Connection error</string>
-    <string name="pop_up_accept">ACCEPT</string>
-    <string name="pop_up_close">CLOSE</string>
+    <string name="pop_up_accept">Accept</string>
+    <string name="pop_up_close">Close</string>
     <string name="connection_error_message">Couldn\'t connect with the device</string>
 
     <!-- Strings related to driving -->
@@ -73,5 +74,8 @@
     <string name="bluetooth_enabled_toast">Bluetooth enabled</string>
     <string name="bluetooth_state_scanning">Scanning...</string>
     <string name="bluetooth_state_stop_scan">Scanning finished</string>
+    <string name="bluetooth_disconnection_ok">Disconnected from device</string>
+    <string name="bluetooth_disconnection_ko">Couldn\'t disconnect from device</string>
+
 
 </resources>
