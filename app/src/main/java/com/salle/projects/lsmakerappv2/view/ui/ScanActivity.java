@@ -29,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.salle.projects.lsmakerappv2.R;
 import com.salle.projects.lsmakerappv2.bluetooth.BluetoothService;
 import com.salle.projects.lsmakerappv2.model.BtDevice;
+import com.salle.projects.lsmakerappv2.utils.Utils;
 import com.salle.projects.lsmakerappv2.view.adapters.ScanItemAdapter;
 import com.salle.projects.lsmakerappv2.view.callbacks.ScanItemCallback;
 import com.salle.projects.lsmakerappv2.viewmodel.ScanViewModel;
@@ -38,10 +39,9 @@ import java.util.List;
 public class ScanActivity extends AppCompatActivity implements ScanItemCallback {
 
     // UI
-    private Button btnScan, btnConnect, btnFilter;
+    private Button btnBack, btnScan, btnConnect, btnFilter;
     private RecyclerView mRecyclerView;
     private ScanItemAdapter mItemAdapter;
-    private TextView tvDeviceName;
 
     // Filter Dialog
     private CharSequence[] mFilterItems = new CharSequence[]{"lsmaker"};
@@ -56,6 +56,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     private boolean askForEnableBLE = true;
 
     private BluetoothService mBluetoothService;
+    private BluetoothConnectionTask mAuthTask = null;
     private boolean doConfig = true;
 
     /**
@@ -77,7 +78,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION, REQUEST_FINE_LOCATION);
-        mBluetoothService = BluetoothService.getInstance(this);
+        mBluetoothService = BluetoothService.getInstance();
         initViews();
         initViewModel();
     }
@@ -103,6 +104,14 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         mRecyclerView = (RecyclerView) findViewById(R.id.activity_scan_recyclerView);
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         mRecyclerView.setLayoutManager(manager);
+
+        btnBack = findViewById(R.id.activity_scan_back_btn);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         btnScan = (Button) findViewById(R.id.activity_scan_btn);
         btnScan.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +173,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             mBluetoothService.enableBluetooth(this, REQUEST_ENABLE_BT);
             showProgress(true);
 
-            mRecyclerView = (RecyclerView) findViewById(R.id.scanning_recyclerView);
+            mRecyclerView = (RecyclerView) findViewById(R.id.activity_scan_recyclerView);
             if (mRecyclerView != null) {
                 mItemAdapter = new ScanItemAdapter(this, null);
                 LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -180,6 +189,22 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         showProgress(false);
     }
 
+    /**
+     * Attempts to bind the android device to the bluetooth device.
+     */
+    public void attemptLogin(BtDevice device) {
+        if (mAuthTask != null) {
+            return;
+        }
+
+        Utils.hideKeyboard(this);
+
+        mBluetoothService.enableBluetooth(this, REQUEST_ENABLE_BT);
+
+        mAuthTask = new BluetoothConnectionTask(device, getApplicationContext());
+        mAuthTask.execute((Void) null);
+    }
+
     private void goToDrivingActivity() {
         final Intent intent = new Intent(this, DriveActivity.class);
         startActivity(intent);
@@ -192,8 +217,10 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         builder.setTitle("Filter By Devices Name");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setIcon(getResources().getDrawable(R.drawable.ic_filter, null));
+            builder.setBackground(getResources().getDrawable(R.drawable.back_white_rad, null));
+        } else {
+            builder.setBackground(ContextCompat.getDrawable(this, R.drawable.back_white_rad));
         }
-        //.setBackground(getResources().getDrawable(R.drawable.back_white_rad, null))
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -209,21 +236,25 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         builder.setMultiChoiceItems(mFilterItems, mCheckedFilterItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-
+                if (b) {
+                    mViewModel.setFilter((String) mFilterItems[i]);
+                } else {
+                    mViewModel.setFilter(mViewModel.DEFAULT_FILTER_VALUE);
+                }
             }
         });
         builder.show();
     }
 
     /*****************************************************************************
-     * **************************  POPUPS  **************************/
+     * ******************************  SNACKBAR  *********************************/
     private void showProgress(boolean status) {
         if (status) {
-            View contextView = getWindow().getDecorView().getRootView();
+            View contextView = findViewById(R.id.activity_scan_coordinator);
             Snackbar.make(contextView, R.string.bluetooth_state_stop_scan, Snackbar.LENGTH_SHORT)
                     .show();
         } else {
-            View contextView = getWindow().getDecorView().getRootView();
+            View contextView = findViewById(R.id.activity_scan_coordinator);
             Snackbar.make(contextView, R.string.bluetooth_state_scanning, Snackbar.LENGTH_SHORT)
                     .show();
         }
@@ -332,10 +363,10 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
      */
     public class BluetoothConnectionTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final BluetoothDevice device;
+        private final BtDevice device;
         private final Context context;
 
-        BluetoothConnectionTask(BluetoothDevice device, Context context) {
+        BluetoothConnectionTask(BtDevice device, Context context) {
             this.device = device;
             this.context = context;
         }
