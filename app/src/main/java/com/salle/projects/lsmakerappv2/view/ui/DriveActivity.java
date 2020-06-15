@@ -150,7 +150,7 @@ public class DriveActivity extends AppCompatActivity {
         btnSlowest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mManager.setSpeed(iVelocity.getProgress());
+                mManager.setSpeed(10);
             }
         });
 
@@ -158,7 +158,7 @@ public class DriveActivity extends AppCompatActivity {
         btnSlow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mManager.setSpeed(iVelocity.getProgress());
+                mManager.setSpeed(30);
             }
         });
 
@@ -166,7 +166,7 @@ public class DriveActivity extends AppCompatActivity {
         btnNormal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mManager.setSpeed(iVelocity.getProgress());
+                mManager.setSpeed(60);
             }
         });
 
@@ -174,7 +174,7 @@ public class DriveActivity extends AppCompatActivity {
         btnFast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mManager.setSpeed(iVelocity.getProgress());
+                mManager.setSpeed(90);
             }
         });
     }

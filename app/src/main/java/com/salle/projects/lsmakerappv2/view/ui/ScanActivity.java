@@ -125,7 +125,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                attemptLogin(mBluetoothService.getDevice());
             }
         });
 
@@ -145,7 +145,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             if (mRecyclerView == null) {
                 mRecyclerView = findViewById(R.id.activity_scan_recyclerView);
             }
-            mItemAdapter = new ScanItemAdapter(ScanActivity.this, btDevices);
+            mItemAdapter = new ScanItemAdapter(ScanActivity.this, ScanActivity.this, btDevices);
             mRecyclerView.setAdapter(mItemAdapter);
 
         });
@@ -175,7 +175,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
             mRecyclerView = (RecyclerView) findViewById(R.id.activity_scan_recyclerView);
             if (mRecyclerView != null) {
-                mItemAdapter = new ScanItemAdapter(this, null);
+                mItemAdapter = new ScanItemAdapter(this, this, null);
                 LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
                 mRecyclerView.setLayoutManager(manager);
                 mRecyclerView.setAdapter(mItemAdapter);
@@ -351,7 +351,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     @Override
     public void onItemClick(Object obj) {
-
+        mBluetoothService.setDevice((BtDevice) obj);
     }
 
     /*****************************************************************************
