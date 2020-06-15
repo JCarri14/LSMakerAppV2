@@ -7,13 +7,11 @@ public class JoystickUtils {
     private static final String TAG = JoystickUtils.class.getName();
 
     public static int getDirectionFromParams(int angle, int strength) {
-        Log.d(TAG, "Angle: " + angle + ", Strength: " + strength);
+        //Log.d(TAG, "Angle: " + angle + ", Strength: " + strength);
         if (isRightTurn(angle)) {
-            Log.d(TAG, "RIGHT");
             return getRightTurnValue(angle, strength);
         } else {
             if (isLeftTurn(angle)) {
-                Log.d(TAG, "LEFT");
                 return -getLeftTurnValue(angle, strength);
             }
         }
