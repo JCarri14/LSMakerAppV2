@@ -18,6 +18,8 @@ import java.util.List;
 public class ScanViewModel extends ViewModel implements BtDiscoveryCallback {
 
     private MutableLiveData<List<BtDevice>> mDevices;
+    private List<BtDevice> mAllDevices;
+
 
     public void requestBluetoothScan() {}
 
