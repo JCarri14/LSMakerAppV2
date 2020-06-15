@@ -125,7 +125,9 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin(mBluetoothService.getDevice());
+                if (mBluetoothService.getDevice() != null) {
+                    attemptLogin(mBluetoothService.getDevice());
+                }
             }
         });
 
