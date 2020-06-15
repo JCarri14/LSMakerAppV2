@@ -57,6 +57,8 @@ implements AdapterView.OnItemClickListener {
                 public void onClick(View view) {
                     if (position != currentItem) {
                         currentItem = position;
+                        BtDevice device = mDevices.get(position);
+                        mCallback.onItemClick(device);
                     } else {
                         currentItem = -1;
                     }
