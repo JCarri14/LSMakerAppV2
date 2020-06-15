@@ -17,6 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <service
+            android:name=".bluetooth.DataSenderService"
+            android:exported="false" />
+
         <activity android:name=".view.ui.ConfigActivity"/>
         <activity android:name=".view.ui.DriveActivity"/>
         <activity android:name=".view.ui.ScanActivity"/>
