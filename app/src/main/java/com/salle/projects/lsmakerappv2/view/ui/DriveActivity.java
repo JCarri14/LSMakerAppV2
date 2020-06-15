@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.salle.projects.lsmakerappv2.R;
+import com.salle.projects.lsmakerappv2.bluetooth.DataSenderService;
 import com.salle.projects.lsmakerappv2.services.TiltService;
 import com.salle.projects.lsmakerappv2.utils.JoystickUtils;
 import com.salle.projects.lsmakerappv2.view.managers.DrivingDataManager;
@@ -70,6 +71,7 @@ public class DriveActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        mManager.setRunning(false);
         if (mManager != null && mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
             TiltService.stopService();
             this.unregisterReceiver(tiltReceiver);
@@ -79,6 +81,11 @@ public class DriveActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (mManager == null) { mManager = DrivingDataManager.getInstance(); }
+        mManager.setRunning(true);
+        Intent mDataSenderServiceIntent = new Intent(this, DataSenderService.class);
+        startService(mDataSenderServiceIntent);
 
         if (mManager != null && mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
             TiltService.initializeService(this);
@@ -206,14 +213,24 @@ public class DriveActivity extends AppCompatActivity {
         builder.setSingleChoiceItems(mModeItems, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                if (mModeItems[i].equals(DrivingDataManager.JOYSTICK_MODE)) {
+                    dialogInterface.dismiss();
+                    setOnJoystickMode();
+                } else {
+                    if (mModeItems[i].equals(DrivingDataManager.ROTATION_MODE)) {
+                        dialogInterface.dismiss();
+                        setOnDeviceRotationMode();
+                    }
+                }
             }
         });
         builder.show();
     }
 
+    /*****************************************************************************
+     * *****************************  MODES SETUP  *******************************/
     @SuppressLint("SourceLockedOrientationActivity")
-    private void setupOnDeviceRotationMode() {
+    private void setOnDeviceRotationMode() {
         int orientation = getResources().getConfiguration().orientation;
         if (orientation != Configuration.ORIENTATION_LANDSCAPE) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -231,6 +248,27 @@ public class DriveActivity extends AppCompatActivity {
         // Accelerometer
         TiltService.initializeService(this);
         this.registerReceiver(tiltReceiver, intentFilter);
+    }
+
+    private void setOnJoystickMode() {
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
+                if (ivIcon != null) {
+                    ivIcon.setVisibility(View.GONE);
+                    // Stopping Service from reading rotation data
+                    TiltService.stopService();
+                    this.unregisterReceiver(tiltReceiver);
+                }
+            }
+        }
+
+        if (jvControl == null) { jvControl = findViewById(R.id.activity_driving_joystick); }
+        // Make invisible the joystick command
+        jvControl.setVisibility(View.VISIBLE);
+
+        // Setting the current control mode
+        mManager.setDataSource(DrivingDataManager.JOYSTICK_MODE);
     }
 
     /** IntentFilter to configure the broadcast receiver */
