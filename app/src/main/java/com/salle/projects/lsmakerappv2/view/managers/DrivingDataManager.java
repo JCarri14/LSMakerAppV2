@@ -6,10 +6,15 @@ public class DrivingDataManager {
     private static DrivingDataManager instance;
     private static Object mutex = new Object();
 
+    // Constants
+    public static final String JOYSTICK_MODE = "Joystick";
+    public static final String ROTATION_MODE = "Rotation";
+
     // Data attributes
     private int speed;
     private int turn;
     private boolean running;
+    private String dataSource;
 
     public static DrivingDataManager getInstance() {
         DrivingDataManager result = instance;
@@ -54,4 +59,11 @@ public class DrivingDataManager {
         this.running = running;
     }
 
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
 }
