@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.salle.projects.lsmakerappv2.R;
+import com.salle.projects.lsmakerappv2.bluetooth.BluetoothService;
 import com.salle.projects.lsmakerappv2.bluetooth.DataSenderService;
 import com.salle.projects.lsmakerappv2.services.TiltService;
 import com.salle.projects.lsmakerappv2.utils.JoystickUtils;
@@ -30,6 +32,8 @@ import com.warkiz.widget.SeekParams;
 import io.github.controlwear.virtual.joystick.android.JoystickView;
 
 public class DriveActivity extends AppCompatActivity {
+
+    private static final String TAG = DriveActivity.class.getName();
 
     // UI attributes
     private Button btnBack, btnMode;
@@ -71,6 +75,8 @@ public class DriveActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
+        if (mManager == null) { mManager = DrivingDataManager.getInstance(); }
         mManager.setRunning(false);
         if (mManager != null && mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
             TiltService.stopService();
@@ -83,10 +89,11 @@ public class DriveActivity extends AppCompatActivity {
         super.onResume();
 
         if (mManager == null) { mManager = DrivingDataManager.getInstance(); }
-        mManager.setRunning(true);
-        Intent mDataSenderServiceIntent = new Intent(this, DataSenderService.class);
-        startService(mDataSenderServiceIntent);
-
+        if (BluetoothService.getInstance().getDevice() != null) {
+            mManager.setRunning(true);
+            Intent mDataSenderServiceIntent = new Intent(this, DataSenderService.class);
+            startService(mDataSenderServiceIntent);
+        }
         if (mManager != null && mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
             TiltService.initializeService(this);
             this.registerReceiver(tiltReceiver, intentFilter);
@@ -98,7 +105,7 @@ public class DriveActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                onBackPressed();
             }
         });
 
@@ -115,27 +122,30 @@ public class DriveActivity extends AppCompatActivity {
             @Override
             public void onMove(int angle, int strength) {
                 int turn = JoystickUtils.getDirectionFromParams(angle, strength);
+                Log.d(TAG, "Current direction: " + turn);
                 mManager.setTurn(turn);
             }
         });
 
-        iVelocity = (IndicatorSeekBar) findViewById(R.id.activity_driving_seekBar);
-        iVelocity.setOnSeekChangeListener(new OnSeekChangeListener() {
-            @Override
-            public void onSeeking(SeekParams seekParams) {
-            }
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            iVelocity = (IndicatorSeekBar) findViewById(R.id.activity_driving_seekBar);
+            iVelocity.setOnSeekChangeListener(new OnSeekChangeListener() {
+                @Override
+                public void onSeeking(SeekParams seekParams) {
+                }
 
-            @Override
-            public void onStartTrackingTouch(IndicatorSeekBar seekBar) {
+                @Override
+                public void onStartTrackingTouch(IndicatorSeekBar seekBar) {
 
-            }
+                }
 
-            @Override
-            public void onStopTrackingTouch(IndicatorSeekBar seekBar) {
-                mManager.setSpeed(seekBar.getProgress());
-            }
-        });
-
+                @Override
+                public void onStopTrackingTouch(IndicatorSeekBar seekBar) {
+                    mManager.setSpeed(seekBar.getProgress());
+                }
+            });
+        }
         btnSlowest = (Button) findViewById(R.id.activity_driving_slowest_btn);
         btnSlowest.setOnClickListener(new View.OnClickListener() {
             @Override
