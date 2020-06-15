@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.salle.projects.lsmakerappv2.R;
+import com.salle.projects.lsmakerappv2.utils.JoystickManager;
+import com.salle.projects.lsmakerappv2.view.managers.DrivingDataManager;
 import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
 import com.warkiz.widget.SeekParams;
@@ -16,15 +18,20 @@ import io.github.controlwear.virtual.joystick.android.JoystickView;
 
 public class DriveActivity extends AppCompatActivity {
 
+    // UI attributes
     private Button btnBack, btnMode;
     private Button btnSlowest, btnSlow, btnNormal, btnFast;
     private JoystickView jvControl;
     private IndicatorSeekBar iVelocity;
 
+    // Data Manager
+    private DrivingDataManager mManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driving);
+        mManager = DrivingDataManager.getInstance();
         initViews();
     }
 
@@ -49,7 +56,8 @@ public class DriveActivity extends AppCompatActivity {
         jvControl.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
             public void onMove(int angle, int strength) {
-
+                int turn = JoystickManager.getDirectionFromParams(angle, strength);
+                mManager.setTurn(turn);
             }
         });
 
@@ -57,7 +65,6 @@ public class DriveActivity extends AppCompatActivity {
         iVelocity.setOnSeekChangeListener(new OnSeekChangeListener() {
             @Override
             public void onSeeking(SeekParams seekParams) {
-
             }
 
             @Override
@@ -67,7 +74,7 @@ public class DriveActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(IndicatorSeekBar seekBar) {
-
+                mManager.setSpeed(seekBar.getProgress());
             }
         });
 
@@ -75,7 +82,7 @@ public class DriveActivity extends AppCompatActivity {
         btnSlowest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mManager.setSpeed(iVelocity.getProgress());
             }
         });
 
@@ -83,7 +90,7 @@ public class DriveActivity extends AppCompatActivity {
         btnSlow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mManager.setSpeed(iVelocity.getProgress());
             }
         });
 
@@ -91,7 +98,7 @@ public class DriveActivity extends AppCompatActivity {
         btnNormal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mManager.setSpeed(iVelocity.getProgress());
             }
         });
 
@@ -99,7 +106,7 @@ public class DriveActivity extends AppCompatActivity {
         btnFast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mManager.setSpeed(iVelocity.getProgress());
             }
         });
     }
