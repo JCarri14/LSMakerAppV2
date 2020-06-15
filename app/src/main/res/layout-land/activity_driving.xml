@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:backgroundTint="@android:color/white"
-                android:text="Menu"
+                android:text="@string/action_back"
                 android:textColor="@color/colorPrimaryDark" />
 
             <Button
