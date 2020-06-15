@@ -43,36 +43,32 @@
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_marginTop="20dp"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
         android:layout_marginBottom="15dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/preferences_device_name_title"
-                android:textSize="18sp"/>
+        <Button
+            android:id="@+id/activity_scan_back_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="@string/action_back"
+            android:textColor="@android:color/white"/>
 
-            <TextView
-                android:id="@+id/activity_scan_device_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/hint_device_name_alt"
-                android:textSize="15sp" />
+        <Button
+            android:id="@+id/activity_scan_connect_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:backgroundTint="@color/colorConnected"
+            android:text="@string/connection_action" />
 
-        </LinearLayout>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/activity_scan_connect_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/colorConnected"
-        android:text="@string/connection_action"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/activity_scan_recyclerView"
@@ -82,13 +78,13 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3"/>
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/activity_scan_coordinator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        tools:layout_editor_absoluteX="16dp"></android.support.design.widget.CoordinatorLayout>
+        tools:layout_editor_absoluteX="16dp"></androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
