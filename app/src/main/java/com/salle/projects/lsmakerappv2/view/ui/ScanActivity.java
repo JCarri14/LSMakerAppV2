@@ -100,11 +100,9 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     private void initViews() {
 
-        if (mRecyclerView == null) {
-            mRecyclerView = (RecyclerView) findViewById(R.id.scanning_recyclerView);
-            LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-            mRecyclerView.setLayoutManager(manager);
-        }
+        mRecyclerView = (RecyclerView) findViewById(R.id.activity_scan_recyclerView);
+        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        mRecyclerView.setLayoutManager(manager);
 
         btnScan = (Button) findViewById(R.id.activity_scan_btn);
         btnScan.setOnClickListener(new View.OnClickListener() {
@@ -133,12 +131,14 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     }
 
     private void initViewModel() {
-        mViewModel = new ViewModelProvider(this).get(ScanViewModel.class);
+        mViewModel = new ViewModelProvider(ScanActivity.this).get(ScanViewModel.class);
         mViewModel.getBluetoothDevices().observe(this, btDevices -> {
-            if (mRecyclerView != null) {
-                mItemAdapter = new ScanItemAdapter(ScanActivity.this, btDevices);
-                mRecyclerView.setAdapter(mItemAdapter);
+            if (mRecyclerView == null) {
+                mRecyclerView = findViewById(R.id.activity_scan_recyclerView);
             }
+            mItemAdapter = new ScanItemAdapter(ScanActivity.this, btDevices);
+            mRecyclerView.setAdapter(mItemAdapter);
+
         });
     }
 
@@ -219,11 +219,11 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
      * **************************  POPUPS  **************************/
     private void showProgress(boolean status) {
         if (status) {
-            View contextView = this.getCurrentFocus();
+            View contextView = getWindow().getDecorView().getRootView();
             Snackbar.make(contextView, R.string.bluetooth_state_stop_scan, Snackbar.LENGTH_SHORT)
                     .show();
         } else {
-            View contextView = this.getCurrentFocus();
+            View contextView = getWindow().getDecorView().getRootView();
             Snackbar.make(contextView, R.string.bluetooth_state_scanning, Snackbar.LENGTH_SHORT)
                     .show();
         }
