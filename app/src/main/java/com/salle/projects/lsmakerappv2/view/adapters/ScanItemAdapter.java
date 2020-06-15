@@ -2,6 +2,7 @@ package com.salle.projects.lsmakerappv2.view.adapters;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.projects.lsmakerappv2.R;
@@ -25,11 +27,14 @@ implements AdapterView.OnItemClickListener {
     private static final String TAG = ScanItemAdapter.class.getName();
 
     private List<BtDevice> mDevices;
+    private int currentItem;
     private ScanItemCallback mCallback;
+    private Context mContext;
 
 
-    public ScanItemAdapter(ScanItemCallback callback, List<BtDevice> devices) {
+    public ScanItemAdapter(Context context, ScanItemCallback callback, List<BtDevice> devices) {
         mDevices = devices;
+        mContext = context;
         mCallback = callback;
     }
 
@@ -47,6 +52,23 @@ implements AdapterView.OnItemClickListener {
             name.append("Device's name: ");
             name.append(mDevices.get(position).getName());
             holder.tvName.setText(name);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (position != currentItem) {
+                        currentItem = position;
+                    }
+                }
+            });
+            if (currentItem == position) {
+                Drawable d;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    d = mContext.getDrawable(R.drawable.back_orange_rad);
+                } else {
+                    d = ContextCompat.getDrawable(mContext, R.drawable.back_orange_rad);
+                }
+                holder.itemView.setBackground(d);
+            }
             holder.tvAddress.setText(mDevices.get(position).getAddress());
             byte rssival = mDevices.get(position).getRssiValue().byteValue();
             if (rssival != 0) {
