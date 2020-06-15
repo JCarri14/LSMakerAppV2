@@ -21,6 +21,7 @@ import android.util.Log;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.salle.projects.lsmakerappv2.bluetooth.callbacks.BtDiscoveryCallback;
+import com.salle.projects.lsmakerappv2.model.BtDevice;
 import com.salle.projects.lsmakerappv2.services.UartService;
 import com.salle.projects.lsmakerappv2.utils.Utils;
 
@@ -54,7 +55,7 @@ public class BluetoothService {
     private int mState = UART_PROFILE_DISCONNECTED;
 
     // Device to connect
-    private BluetoothDevice mDevice = null;
+    private BtDevice mDevice = null;
 
     // UART service connected/disconnected
     private ServiceConnection mServiceConnection;
@@ -106,7 +107,7 @@ public class BluetoothService {
         }
     };
 
-    public static BluetoothService getInstance(Context context) {
+    public static BluetoothService getInstance() {
         BluetoothService result = instance;
         if (result == null) {
             synchronized (mutex) {
@@ -154,7 +155,7 @@ public class BluetoothService {
      * @param context the activity's context to use to initialize the binding.
      * @return true if the binding was successfully achieved. False otherwise.
      */
-    public Boolean connect(BluetoothDevice device, Context context) {
+    public Boolean connect(BtDevice device, Context context) {
         Log.d(TAG, "CONNECT");
         uartService = new UartService();
         Log.d(TAG, "onServiceConnected uartService= " + uartService);
@@ -163,8 +164,8 @@ public class BluetoothService {
         }
 
         String deviceAddress = device.getAddress();
-        mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
-
+        BluetoothDevice deviceAux = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
+        mDevice = new BtDevice(deviceAux.getName(), deviceAux.getAddress(), null);
         Log.d(TAG, "... device.address==" + mDevice + "mserviceValue" + uartService);
         if (uartService.connect(deviceAddress)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -174,6 +175,7 @@ public class BluetoothService {
             }
             return true;
         } else {
+            mDevice = null;
             return false;
         }
     }
@@ -376,5 +378,16 @@ public class BluetoothService {
         intentFilter.addAction(UartService.ACTION_DATA_AVAILABLE);
         intentFilter.addAction(UartService.DEVICE_DOES_NOT_SUPPORT_UART);
         return intentFilter;
+    }
+
+    /**
+     * Getters and Setters
+     */
+    public BtDevice getDevice() {
+        return mDevice;
+    }
+
+    public void setDevice(BtDevice device) {
+        mDevice = device;
     }
 }

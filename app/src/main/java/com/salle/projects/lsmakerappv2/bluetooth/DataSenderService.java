@@ -49,7 +49,7 @@ public class DataSenderService extends IntentService {
             if (speed != 0 || turn != 0 || moving) {
                 moving = true;
                 //Log.d(TAG, speed + " " + turn);
-                BluetoothService.getInstance(this).sendMessage(
+                BluetoothService.getInstance().sendMessage(
                         dataSenderAdapter.generateMovementFrame(speed, acceleration, turn));
                 if (speed == 0 && turn == 0) {
                     moving = false;

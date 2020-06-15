@@ -28,7 +28,9 @@ public class DrivingDataManager {
         return result;
     }
 
-    private DrivingDataManager() {}
+    private DrivingDataManager() {
+        this.dataSource = JOYSTICK_MODE;
+    }
 
     public int getSpeed() {
         return speed;
