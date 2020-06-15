@@ -29,17 +29,21 @@ public class JoystickUtils {
     }
 
     private static int getRightTurnValue(int angle, int strength) {
+        int res = (strength/100);
         if (angle < 90) {
-            angle = ((angle * (-100))/90)+100;
+            res = ((angle * (-100))/90)+100;
         } else {
-            angle = 360-angle; // MIN Value would be 271 and MAX value 359;
+            if (angle > 270) {
+                angle = 360 - angle; // MIN Value would be 271 and MAX value 359;
+                res = ((angle * (-100))/90)+100;
+            }
         }
-        int res = (angle * (-100)/90)+100;
-        res = (1-(strength/90))*30;
+        res = res - (strength/100);
         return res;
     }
 
     private static int getLeftTurnValue(int angle, int strength) {
+        int res = (strength/100);
         if (angle < 180) {
             // We want to be always working with values between 0 and 90;
             angle = 180 - angle;
@@ -48,8 +52,8 @@ public class JoystickUtils {
             // would mean 100% of that direction...
             angle = angle-180;
         }
-        int res = ((angle * (-100))/90)+100;
-        res = (1-(strength/90))*25;
+        angle = ((angle * (-100))/90)+100;
+        res = angle - (strength/90);
         return res;
     }
 }
