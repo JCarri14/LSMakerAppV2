@@ -185,35 +185,38 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         startActivity(intent);
     }
 
+    /*****************************************************************************
+     * ***************************  FILTER DIALOG  ******************************/
     private void displayFilterDialog() {
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
-                .setTitle("Filter By Devices Name")
-                .setIcon(getResources().getDrawable(R.drawable.ic_filter, null))
-                //.setBackground(getResources().getDrawable(R.drawable.back_white_rad, null))
-                .setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                })
-                .setMultiChoiceItems(mFilterItems, mCheckedFilterItems, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle("Filter By Devices Name");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setIcon(getResources().getDrawable(R.drawable.ic_filter, null));
+        }
+        //.setBackground(getResources().getDrawable(R.drawable.back_white_rad, null))
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setMultiChoiceItems(mFilterItems, mCheckedFilterItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i, boolean b) {
 
-                    }
-                });
+            }
+        });
         builder.show();
     }
 
     /*****************************************************************************
      * **************************  POPUPS  **************************/
-
     private void showProgress(boolean status) {
         if (status) {
             View contextView = this.getCurrentFocus();
@@ -252,7 +255,9 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     private void showBluetoothNoCompatiblePopUp() {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.bluetooth_not_compatible_title));
-        builder.setIcon(getResources().getDrawable(R.drawable.ic_alert, null));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setIcon(getResources().getDrawable(R.drawable.ic_alert, null));
+        }
         builder.setMessage(R.string.bluetooth_not_compatible_message);
         builder.setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -266,11 +271,13 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
      * Shows a pop up informing the user that Location permissions aren't granted and the app will close.
      */
     private void showLocationPermissionNotGrantedPopUp() {
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.location_not_granted_title))
-            .setIcon(getResources().getDrawable(R.drawable.ic_alert, null))
-            .setMessage(R.string.location_not_granted_message)
-            .setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle(getString(R.string.location_not_granted_title));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setIcon(getResources().getDrawable(R.drawable.ic_alert, null));
+        }
+        builder.setMessage(R.string.location_not_granted_message);
+        builder.setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 finish();
             }
@@ -284,11 +291,13 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
      * @param scanningActivity
      */
     private void showBluetoothPermissionNotGrantedPopUp(final ScanActivity scanningActivity) {
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.bluetooth_not_granted_title))
-            .setIcon(getResources().getDrawable(R.drawable.ic_alert, null))
-            .setMessage(R.string.bluetooth_not_granted_message)
-            .setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle(getString(R.string.bluetooth_not_granted_title));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setIcon(getResources().getDrawable(R.drawable.ic_alert, null));
+        }
+        builder.setMessage(R.string.bluetooth_not_granted_message);
+        builder.setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 askForEnableBLE = true;
                 mBluetoothService.enableBluetooth(scanningActivity, REQUEST_ENABLE_BT);
