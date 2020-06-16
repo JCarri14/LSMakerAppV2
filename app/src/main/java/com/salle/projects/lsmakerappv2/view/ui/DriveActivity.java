@@ -315,6 +315,7 @@ public class DriveActivity extends AppCompatActivity {
     /** IntentFilter to configure the broadcast receiver */
     private IntentFilter intentFilter = new IntentFilter(TiltService.TILT_DATA_UPDATED);
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -322,7 +323,7 @@ public class DriveActivity extends AppCompatActivity {
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 if (mManager.getDataSource().equals(DrivingDataManager.JOYSTICK_MODE)) {
-                    setRequestedOrientation(newConfig.orientation);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 }
             }
         }

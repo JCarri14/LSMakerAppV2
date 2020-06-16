@@ -57,6 +57,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     private BluetoothService mBluetoothService;
     private BluetoothConnectionTask mAuthTask = null;
+    private BtDevice mSelectedDevice;
     private boolean doConfig = true;
 
     /**
@@ -126,7 +127,9 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             @Override
             public void onClick(View view) {
                 if (mBluetoothService.getDevice() != null) {
-                    attemptLogin(mBluetoothService.getDevice());
+                    mBluetoothService.setDevice(mSelectedDevice);
+                    attemptLogin(mSelectedDevice);
+                    mSelectedDevice = null;
                 }
             }
         });
@@ -353,7 +356,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     @Override
     public void onItemClick(Object obj) {
-        mBluetoothService.setDevice((BtDevice) obj);
+        mSelectedDevice = (BtDevice) obj;
     }
 
     /*****************************************************************************
