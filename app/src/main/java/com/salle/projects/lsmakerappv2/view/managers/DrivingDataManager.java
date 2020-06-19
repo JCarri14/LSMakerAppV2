@@ -7,8 +7,9 @@ public class DrivingDataManager {
     private static Object mutex = new Object();
 
     // Constants
-    public static final String JOYSTICK_MODE = "Joystick";
-    public static final String ROTATION_MODE = "Rotation";
+    public String JOYSTICK_MODE_VERT = "Joystick (Vertical)";
+    public String JOYSTICK_MODE_HOR = "Joystick (Horizontal)";
+    public String DEVICE_ROTATION_MODE = "Device Rotation";
 
     // Data attributes
     private int speed;
@@ -29,7 +30,7 @@ public class DrivingDataManager {
     }
 
     private DrivingDataManager() {
-        this.dataSource = JOYSTICK_MODE;
+        this.dataSource = JOYSTICK_MODE_VERT;
     }
 
     public int getSpeed() {
