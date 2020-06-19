@@ -1,7 +1,6 @@
 package com.salle.projects.lsmakerappv2.view.ui;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -16,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -46,6 +46,9 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     // Filter Dialog
     private CharSequence[] mFilterItems = new CharSequence[]{"lsmaker"};
     private boolean[] mCheckedFilterItems = new boolean[]{false};
+
+    // Connection Dialog
+    private AlertDialog mConnectDialog;
 
     // ViewModel
     private ScanViewModel mViewModel;
@@ -126,8 +129,9 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mBluetoothService.setDevice(mSelectedDevice);
                 if (mBluetoothService.getDevice() != null) {
-                    mBluetoothService.setDevice(mSelectedDevice);
+                    displayConnectionDialog();
                     attemptLogin(mSelectedDevice);
                     mSelectedDevice = null;
                 }
@@ -209,6 +213,11 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         mAuthTask.execute((Void) null);
     }
 
+    private void gotToMainActivity() {
+        final Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     private void goToDrivingActivity() {
         final Intent intent = new Intent(this, DriveActivity.class);
         startActivity(intent);
@@ -248,6 +257,14 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             }
         });
         builder.show();
+    }
+
+    private void displayConnectionDialog() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setView(R.layout.dialog_connecting);
+        builder.setCancelable(true);
+        mConnectDialog = builder.create();
+        mConnectDialog.show();
     }
 
     /*****************************************************************************
@@ -405,7 +422,8 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             showConnectionProgress(false);
 
             if (success) {
-                goToDrivingActivity();
+                mConnectDialog.dismiss();
+                gotToMainActivity();
             } else {
                 showConnectionErrorPopUp(getString(R.string.connection_error_message));
             }
