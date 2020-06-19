@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setDefaultDeviceInformation();
         checkDeviceInformation();
         DrivingDataManager.getInstance().setDataSource(DrivingDataManager.getInstance().JOYSTICK_MODE_VERT);
     }
@@ -80,5 +81,16 @@ public class MainActivity extends AppCompatActivity {
             }
             tvName.setText(manager.getDevice().getName());
         }
+    }
+
+    private void setDefaultDeviceInformation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            tvState.setTextColor(getColor(R.color.colorError));
+        } else {
+            tvState.setTextColor(ContextCompat.getColor(this, R.color.colorError));
+        }
+        tvState.setText(getString(R.string.connection_state_disconnected));
+        tvName.setText(getString(R.string.hint_device_name_alt));
+
     }
 }

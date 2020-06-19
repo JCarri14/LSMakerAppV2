@@ -82,9 +82,11 @@
         android:id="@+id/activity_scan_coordinator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        tools:layout_editor_absoluteX="16dp"></androidx.coordinatorlayout.widget.CoordinatorLayout>
+        tools:layout_editor_absoluteX="16dp">
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"

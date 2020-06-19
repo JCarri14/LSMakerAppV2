@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -32,19 +33,27 @@ public class ConfigActivity extends AppCompatActivity {
         initViews();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setDefaultDeviceInformation();
+        checkDeviceInformation();
+    }
+
     private void initViews() {
         btnDisconnect = findViewById(R.id.preferences_disconnect_btn);
         btnDisconnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean res = BluetoothService.getInstance().disconnect();
+                setDefaultDeviceInformation();
                 showConnectionResult(res);
             }
         });
 
         tvName = findViewById(R.id.preferences_device_name);
         tvAddress = findViewById(R.id.preferences_device_address);
-
+        checkDeviceInformation();
         cbMode = findViewById(R.id.preferences_invert_checkbox);
     }
 
@@ -54,6 +63,12 @@ public class ConfigActivity extends AppCompatActivity {
             tvName.setText(manager.getDevice().getName());
             tvAddress.setText(manager.getDevice().getAddress());
         }
+    }
+
+    private void setDefaultDeviceInformation() {
+        tvAddress.setText(getString(R.string.hint_device_name_alt));
+        tvName.setText(getString(R.string.hint_device_name_alt));
+
     }
 
     /*****************************************************************************

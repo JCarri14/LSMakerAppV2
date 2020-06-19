@@ -203,7 +203,13 @@ public class BluetoothService {
     public boolean disconnect() {
         if (mDevice!=null)
         {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mBluetoothAdapter.getBluetoothLeScanner().stopScan(mScanCallback);
+            } else {
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            }
             uartService.disconnect();
+            mDevice = null;
         }
         return true;
     }

@@ -102,11 +102,8 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
                     mConnectDialog.dismiss();
                 }
             }
-
         }
     };
-
-
 
 
     @Override
@@ -136,6 +133,12 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBluetoothService.service_stop();
+    }
+
     private void initViews() {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.activity_scan_recyclerView);
@@ -162,39 +165,9 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         // Check if we are already connected to a device
         if (mBluetoothService.getDevice() != null) {
             btnConnect.setText(R.string.preferences_connection_disconnect);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                btnConnect.setBackgroundTintList(getResources().getColorStateList(R.color.colorError));
-            } else {
-                btnConnect.setBackgroundColor(ContextCompat.getColor(this, R.color.colorError));
-            }
-            btnConnect.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    displayConnectDialog(false);
-                    mBluetoothService.disconnect();
-                    mBluetoothService.setDevice(null);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        btnConnect.setBackgroundTintList(getResources().getColorStateList(R.color.colorConnected));
-                    } else {
-                        btnConnect.setBackgroundColor(ContextCompat.getColor(ScanActivity.this, R.color.colorError));
-                    }
-                    btnConnect.setText(R.string.connection_action);
-                }
-            });
+            connectButtonSetDisconnect();
         } else {
-            btnConnect.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mSelectedDevice != null) {
-                        mBluetoothService.setDevice(mSelectedDevice);
-                        displayConnectDialog(true);
-                        attemptLogin(mSelectedDevice);
-                        mSelectedDevice = null;
-                    } else {
-                        showNoDeviceSelectedPopUp();
-                    }
-                }
-            });
+            connectButtonSetConnect();
         }
 
         btnFilter = (Button) findViewById(R.id.activity_scan_filter_btn);
@@ -216,6 +189,48 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             mItemAdapter = new ScanItemAdapter(ScanActivity.this, ScanActivity.this, btDevices);
             mRecyclerView.setAdapter(mItemAdapter);
 
+        });
+    }
+
+    private void connectButtonSetConnect() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            btnConnect.setBackgroundTintList(getResources().getColorStateList(R.color.colorConnected));
+        } else {
+            btnConnect.setBackgroundColor(ContextCompat.getColor(this, R.color.colorConnected));
+        }
+        btnConnect.setText(R.string.connection_action);
+        btnConnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mSelectedDevice != null) {
+                    mBluetoothService.setDevice(mSelectedDevice);
+                    displayConnectDialog(true);
+                    attemptLogin(mSelectedDevice);
+                    mSelectedDevice = null;
+                    connectButtonSetDisconnect();
+                } else {
+                    showNoDeviceSelectedPopUp();
+                }
+            }
+        });
+    }
+
+    private void connectButtonSetDisconnect() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            btnConnect.setBackgroundTintList(getResources().getColorStateList(R.color.colorError));
+        } else {
+            btnConnect.setBackgroundColor(ContextCompat.getColor(this, R.color.colorError));
+        }
+        btnConnect.setText(R.string.preferences_connection_disconnect);
+        btnConnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayConnectDialog(false);
+                mBluetoothService.disconnect();
+                mBluetoothService.setDevice(null);
+                connectButtonSetConnect();
+                mConnectDialog.dismiss();
+            }
         });
     }
 
