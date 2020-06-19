@@ -176,7 +176,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         service_init();
         if (askForEnableBLE) {
             mBluetoothService.enableBluetooth(this, REQUEST_ENABLE_BT);
-            showProgress(true);
+            showScanningProgress(true);
 
             mRecyclerView = (RecyclerView) findViewById(R.id.activity_scan_recyclerView);
             if (mRecyclerView != null) {
@@ -191,7 +191,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     public void startScanning() {
         mBluetoothService.startScanningDevices();
-        showProgress(false);
+        showScanningProgress(false);
     }
 
     /**
@@ -202,9 +202,8 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             return;
         }
 
-        Utils.hideKeyboard(this);
-
-        mBluetoothService.enableBluetooth(this, REQUEST_ENABLE_BT);
+        //Utils.hideKeyboard(this);
+        //mBluetoothService.enableBluetooth(this, REQUEST_ENABLE_BT);
 
         mAuthTask = new BluetoothConnectionTask(device, getApplicationContext());
         mAuthTask.execute((Void) null);
@@ -253,7 +252,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     /*****************************************************************************
      * ******************************  SNACKBAR  *********************************/
-    private void showProgress(boolean status) {
+    private void showScanningProgress(boolean status) {
         if (status) {
             View contextView = findViewById(R.id.activity_scan_coordinator);
             Snackbar.make(contextView, R.string.bluetooth_state_stop_scan, Snackbar.LENGTH_SHORT)
@@ -263,6 +262,24 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             Snackbar.make(contextView, R.string.bluetooth_state_scanning, Snackbar.LENGTH_SHORT)
                     .show();
         }
+    }
+
+    private void showConnectionProgress(boolean status) {
+        if (status) {
+            View contextView = findViewById(R.id.activity_scan_coordinator);
+            Snackbar.make(contextView, R.string.connection_action_connect, Snackbar.LENGTH_SHORT)
+                    .show();
+        } else {
+            View contextView = findViewById(R.id.activity_scan_coordinator);
+            Snackbar.make(contextView, R.string.connection_state_connected, Snackbar.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    private void showConnectionStopped() {
+        View contextView = findViewById(R.id.activity_scan_coordinator);
+        Snackbar.make(contextView, R.string.connection_action_stoped, Snackbar.LENGTH_SHORT)
+                .show();
     }
 
     /**
@@ -297,6 +314,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         builder.setMessage(R.string.bluetooth_not_compatible_message);
         builder.setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
                 finish();
             }
         });
@@ -384,7 +402,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         @Override
         protected void onPostExecute(final Boolean success) {
             //mAuthTask = null;
-            showProgress(false);
+            showConnectionProgress(false);
 
             if (success) {
                 goToDrivingActivity();
@@ -396,7 +414,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         @Override
         protected void onCancelled() {
             //mAuthTask = null;
-            showProgress(false);
+            showConnectionStopped();
         }
     }
 

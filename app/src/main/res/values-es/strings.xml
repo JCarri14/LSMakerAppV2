@@ -79,6 +79,8 @@
     <string name="bluetooth_disconnection_ok">Desconectado del dispositivo</string>
     <string name="bluetooth_disconnection_ko">No se ha podido desconectar</string>
     <string name="action_back">Atrás</string>
+    <string name="connection_action_connect">Conectando</string>
+    <string name="connection_action_stoped">Conexión interrumpida</string>
 
 
 </resources>

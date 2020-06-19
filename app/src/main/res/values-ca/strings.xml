@@ -78,5 +78,7 @@
     <string name="bluetooth_disconnection_ok">Desconnectat del dispositiu</string>
     <string name="bluetooth_disconnection_ko">No s\'ha pogut desconnectar</string>
     <string name="action_back">Endarrere</string>
+    <string name="connection_action_connect">Connectant</string>
+    <string name="connection_action_stoped">Connexió aturada</string>
 
 </resources>
