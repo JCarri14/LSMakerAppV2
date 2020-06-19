@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 
 import com.salle.projects.lsmakerappv2.R;
 import com.salle.projects.lsmakerappv2.bluetooth.BluetoothService;
+import com.salle.projects.lsmakerappv2.view.managers.DrivingDataManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         checkDeviceInformation();
+        DrivingDataManager.getInstance().setDataSource(DrivingDataManager.getInstance().JOYSTICK_MODE_VERT);
     }
 
     private void initViews() {
