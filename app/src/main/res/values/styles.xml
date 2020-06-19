@@ -5,19 +5,11 @@
         <!-- Original AppCompat attributes. -->
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorSecondary">@color/colorSalle</item>
-        <item name="android:colorBackground">@color/colorSalle</item>
+        <item name="android:colorBackground">@color/colorWhite</item>
         <item name="colorError">@color/colorError</item>
         <item name="windowActionBar">true</item>
 
         <!-- New MaterialComponents attributes. -->
-        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
-        <item name="colorSecondaryVariant">@color/colorSalleDark</item>
-        <item name="colorSurface">@color/colorSalle</item>
-        <item name="colorOnPrimary">@color/colorPrimary</item>
-        <item name="colorOnSecondary">@color/colorSalleDark</item>
-        <item name="colorOnBackground">@drawable/bck_dark_gradient</item>
-        <item name="colorOnError">@color/colorError</item>
-        <item name="colorOnSurface">@color/colorSalleDark</item>
         <item name="scrimBackground">@color/mtrl_scrim_color</item>
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
@@ -44,7 +36,7 @@
     </style>
 
     <style name="SpeedButton" parent="Theme.MaterialComponents">
-        <item name="android:backgroundTint">@android:color/white</item>
+        <item name="android:backgroundTint">@color/colorWhite</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:paddingTop">15dp</item>
         <item name="android:paddingBottom">15dp</item>
