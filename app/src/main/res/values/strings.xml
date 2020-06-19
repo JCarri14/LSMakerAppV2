@@ -8,6 +8,7 @@
     <string name="connection_state_connected">Connected</string>
     <string name="connection_state_disconnected">Disconnected</string>
     <string name="connection_action_connect">Connecting...</string>
+    <string name="connection_action_disconnect">Disconnecting...</string>
     <string name="connection_action_stoped">Connection stopped</string>
 
     <string name="hint_device_name">Device\'s name</string>

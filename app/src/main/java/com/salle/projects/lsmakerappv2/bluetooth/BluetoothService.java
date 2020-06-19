@@ -3,6 +3,8 @@ package com.salle.projects.lsmakerappv2.bluetooth;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -37,7 +39,7 @@ public class BluetoothService {
     private static BluetoothService instance;
     private static Object mutex = new Object();
 
-    public final String SCAN_STOPPED = "com.lasalle.lsmaker_remote.ACTION_SCAN_STOPPED";
+    public static final String SCAN_STOPPED = "com.lasalle.lsmaker_remote.ACTION_SCAN_STOPPED";
     private final long SCAN_PERIOD = 5000; //scanning for 5 seconds
     private final int UART_PROFILE_CONNECTED = 20;
     private final int UART_PROFILE_DISCONNECTED = 21;
@@ -121,6 +123,7 @@ public class BluetoothService {
 
     private BluetoothService() {}
 
+
     /**
      * Method that initializes the service.
      *
@@ -189,7 +192,6 @@ public class BluetoothService {
         //send data to service
         Log.d(TAG, Utils.bytesToHex(message));
         uartService.writeRXCharacteristic(message);
-
         return true;
     }
 

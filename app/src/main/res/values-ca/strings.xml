@@ -87,5 +87,6 @@
     <string name="driving_speed_slow">Lent</string>
     <string name="driving_speed_normal">Normal</string>
     <string name="driving_speed_fast">Ràpid</string>
+    <string name="connection_action_disconnect">Desconnectant</string>
 
 </resources>

@@ -1,11 +1,17 @@
 package com.salle.projects.lsmakerappv2.view.ui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -29,6 +35,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.salle.projects.lsmakerappv2.R;
 import com.salle.projects.lsmakerappv2.bluetooth.BluetoothService;
 import com.salle.projects.lsmakerappv2.model.BtDevice;
+import com.salle.projects.lsmakerappv2.services.UartService;
 import com.salle.projects.lsmakerappv2.utils.Utils;
 import com.salle.projects.lsmakerappv2.view.adapters.ScanItemAdapter;
 import com.salle.projects.lsmakerappv2.view.callbacks.ScanItemCallback;
@@ -50,6 +57,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     // Connection Dialog
     private AlertDialog mConnectDialog;
 
+
     // ViewModel
     private ScanViewModel mViewModel;
 
@@ -62,6 +70,10 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     private BluetoothConnectionTask mAuthTask = null;
     private BtDevice mSelectedDevice;
     private boolean doConfig = true;
+
+    // IntentFilter to configure the broadcast receiver
+    private IntentFilter intentFilter = new IntentFilter(BluetoothService.SCAN_STOPPED);
+
 
     /**
      * Asks the system and / or the user for a given permission.
@@ -76,6 +88,26 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             //}
         }
     }
+
+    // Broadcast receiver for the scanning progress
+    private BroadcastReceiver scanningReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            final Intent mIntent = intent;
+            //*********************//
+            if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
+                if (mConnectDialog != null && mConnectDialog.isShowing()) {
+                    mConnectDialog.dismiss();
+                }
+            }
+
+        }
+    };
+
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,8 +131,9 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         super.onPause();
         if (doConfig) {
             mBluetoothService.pauseBluetooth();
-            //unregisterReceiver(scanningReceiver);
+            unregisterReceiver(scanningReceiver);
         }
+
     }
 
     private void initViews() {
@@ -126,17 +159,43 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         });
 
         btnConnect = (Button) findViewById(R.id.activity_scan_connect_btn);
-        btnConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mBluetoothService.setDevice(mSelectedDevice);
-                if (mBluetoothService.getDevice() != null) {
-                    displayConnectionDialog();
-                    attemptLogin(mSelectedDevice);
-                    mSelectedDevice = null;
-                }
+        // Check if we are already connected to a device
+        if (mBluetoothService.getDevice() != null) {
+            btnConnect.setText(R.string.preferences_connection_disconnect);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                btnConnect.setBackgroundTintList(getResources().getColorStateList(R.color.colorError));
+            } else {
+                btnConnect.setBackgroundColor(ContextCompat.getColor(this, R.color.colorError));
             }
-        });
+            btnConnect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    displayConnectDialog(false);
+                    mBluetoothService.disconnect();
+                    mBluetoothService.setDevice(null);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        btnConnect.setBackgroundTintList(getResources().getColorStateList(R.color.colorConnected));
+                    } else {
+                        btnConnect.setBackgroundColor(ContextCompat.getColor(ScanActivity.this, R.color.colorError));
+                    }
+                    btnConnect.setText(R.string.connection_action);
+                }
+            });
+        } else {
+            btnConnect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mSelectedDevice != null) {
+                        mBluetoothService.setDevice(mSelectedDevice);
+                        displayConnectDialog(true);
+                        attemptLogin(mSelectedDevice);
+                        mSelectedDevice = null;
+                    } else {
+                        showNoDeviceSelectedPopUp();
+                    }
+                }
+            });
+        }
 
         btnFilter = (Button) findViewById(R.id.activity_scan_filter_btn);
         btnFilter.setOnClickListener(new View.OnClickListener() {
@@ -190,7 +249,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
                 mRecyclerView.setAdapter(mItemAdapter);
             }
         }
-        //registerReceiver(scanningReceiver, intentFilter);
+        registerReceiver(scanningReceiver, intentFilter);
     }
 
     public void startScanning() {
@@ -259,10 +318,12 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         builder.show();
     }
 
-    private void displayConnectionDialog() {
+    private void displayConnectDialog(boolean connecting) {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        builder.setView(R.layout.dialog_connecting);
-        builder.setCancelable(true);
+        if (connecting) { builder.setView(R.layout.dialog_connecting);
+        } else { builder.setView(R.layout.dialog_disconnecting);}
+
+        builder.setCancelable(false);
         mConnectDialog = builder.create();
         mConnectDialog.show();
     }
@@ -297,6 +358,20 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         View contextView = findViewById(R.id.activity_scan_coordinator);
         Snackbar.make(contextView, R.string.connection_action_stoped, Snackbar.LENGTH_SHORT)
                 .show();
+    }
+
+    /*****************************************************************************
+     * ******************************  POPUPS  *********************************/
+    private void showNoDeviceSelectedPopUp() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.connection_action))
+                .setMessage("No device was selected")
+                .setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.show();
     }
 
     /**
