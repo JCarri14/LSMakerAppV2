@@ -1,6 +1,5 @@
 package com.salle.projects.lsmakerappv2.view.ui;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,13 +7,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.OrientationEventListener;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -39,7 +38,9 @@ public class DriveActivity extends AppCompatActivity {
     private static final String TAG = DriveActivity.class.getName();
 
     // UI attributes
-    private Button btnBack, btnMode;
+    private ImageView btnBack;
+    private ImageButton btnMode;
+    private Button btnBackHor, btnModeHor;
     private Button btnSlowest, btnSlow, btnNormal, btnFast;
     private ImageView ivIcon;
     private JoystickView jvControl;
@@ -49,8 +50,7 @@ public class DriveActivity extends AppCompatActivity {
     private DrivingDataManager mManager;
 
     // Dialog mode options
-    private CharSequence[] mModeItems = new CharSequence[]{DrivingDataManager.JOYSTICK_MODE,
-            DrivingDataManager.ROTATION_MODE};
+    private CharSequence[] mModeItems;
 
     /** Broadcast receiver to listen to the TiltService's changes.*/
     private BroadcastReceiver tiltReceiver = new BroadcastReceiver() {
@@ -72,6 +72,13 @@ public class DriveActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driving);
         mManager = DrivingDataManager.getInstance();
+
+        mManager.JOYSTICK_MODE_VERT = getResources().getString(R.string.driving_mode_joystick_vert);
+        mManager.JOYSTICK_MODE_HOR = getResources().getString(R.string.driving_mode_joystick_hor);
+        mManager.DEVICE_ROTATION_MODE = getResources().getString(R.string.driving_mode_device_rotation);
+
+        mModeItems = new CharSequence[]{mManager.JOYSTICK_MODE_VERT, mManager.JOYSTICK_MODE_HOR,
+                        mManager.DEVICE_ROTATION_MODE};
         initViews();
     }
 
@@ -79,7 +86,7 @@ public class DriveActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if (mManager != null && mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
+        if (mManager != null && mManager.getDataSource().equals(mManager.DEVICE_ROTATION_MODE)) {
             try {
                 TiltService.stopService();
                 this.unregisterReceiver(tiltReceiver);
@@ -99,7 +106,7 @@ public class DriveActivity extends AppCompatActivity {
             Intent mDataSenderServiceIntent = new Intent(this, DataSenderService.class);
             startService(mDataSenderServiceIntent);
         }
-        if (mManager != null && mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
+        if (mManager != null && mManager.getDataSource().equals(mManager.DEVICE_ROTATION_MODE)) {
             // Turn visible the device icon
             ivIcon = findViewById(R.id.activity_driving_icon);
             ivIcon.setVisibility(View.VISIBLE);
@@ -110,27 +117,49 @@ public class DriveActivity extends AppCompatActivity {
             // Accelerometer
             TiltService.initializeService(this);
             this.registerReceiver(tiltReceiver, intentFilter);
+        } else {
+            initJoystick();
         }
     }
 
     private void initViews() {
-        btnBack = (Button) findViewById(R.id.activity_driving_back);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            btnBack = (ImageView) findViewById(R.id.act_driving_back);
+            btnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBackPressed();
+                }
+            });
 
-        btnMode = (Button) findViewById(R.id.activity_driving_mode);
-        btnMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                displayModeDialog();
-            }
-        });
+            btnMode = (ImageButton) findViewById(R.id.act_driving_mode);
+            btnMode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    displayModeDialog();
+                }
+            });
+        } else {
 
-        jvControl = (JoystickView) findViewById(R.id.activity_driving_joystick);
+            btnBackHor = (Button) findViewById(R.id.act_driving_back_hor);
+            btnBackHor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBackPressed();
+                }
+            });
+
+            btnModeHor = (Button) findViewById(R.id.act_driving_mode_hor);
+            btnModeHor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    displayModeDialog();
+                }
+            });
+        }
+
+        jvControl = (JoystickView) findViewById(R.id.act_driving_joystick);
         jvControl.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
             public void onMove(int angle, int strength) {
@@ -140,9 +169,8 @@ public class DriveActivity extends AppCompatActivity {
             }
         });
 
-        int orientation = getResources().getConfiguration().orientation;
         if (orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            iVelocity = (IndicatorSeekBar) findViewById(R.id.activity_driving_seekBar);
+            iVelocity = (IndicatorSeekBar) findViewById(R.id.act_driving_seekBar);
             iVelocity.setOnSeekChangeListener(new OnSeekChangeListener() {
                 @Override
                 public void onSeeking(SeekParams seekParams) {
@@ -159,35 +187,40 @@ public class DriveActivity extends AppCompatActivity {
                 }
             });
         }
-        btnSlowest = (Button) findViewById(R.id.activity_driving_slowest_btn);
+
+        btnSlowest = (Button) findViewById(R.id.act_driving_slowest_btn);
         btnSlowest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mManager.setSpeed(10);
+                if (iVelocity != null) iVelocity.setProgress(10);
             }
         });
 
-        btnSlow = (Button) findViewById(R.id.activity_driving_slow_btn);
+        btnSlow = (Button) findViewById(R.id.act_driving_slow_btn);
         btnSlow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mManager.setSpeed(30);
+                if (iVelocity != null) iVelocity.setProgress(30);
             }
         });
 
-        btnNormal = (Button) findViewById(R.id.activity_driving_normal_btn);
+        btnNormal = (Button) findViewById(R.id.act_driving_normal_btn);
         btnNormal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mManager.setSpeed(60);
+                if (iVelocity != null) iVelocity.setProgress(60);
             }
         });
 
-        btnFast = (Button) findViewById(R.id.activity_driving_fast_btn);
+        btnFast = (Button) findViewById(R.id.act_driving_fast_btn);
         btnFast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mManager.setSpeed(90);
+                if (iVelocity != null) iVelocity.setProgress(90);
             }
         });
     }
@@ -218,34 +251,33 @@ public class DriveActivity extends AppCompatActivity {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle("Choose the Driving Mode");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setIcon(getResources().getDrawable(R.drawable.ic_control, null));
             builder.setBackground(getResources().getDrawable(R.drawable.back_white_rad, null));
         } else {
             builder.setBackground(ContextCompat.getDrawable(this, R.drawable.back_white_rad));
         }
         //.setBackground(getResources().getDrawable(R.drawable.back_white_rad, null))
-        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+
         builder.setItems(mModeItems, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (mModeItems[i].equals(DrivingDataManager.JOYSTICK_MODE)) {
+                if (mModeItems[i].equals(mManager.JOYSTICK_MODE_VERT)) {
                     dialogInterface.dismiss();
-                    setOnJoystickMode();
+                    setOnJoystickMode(true);
                 } else {
-                    if (mModeItems[i].equals(DrivingDataManager.ROTATION_MODE)) {
+                    if (mModeItems[i].equals(mManager.DEVICE_ROTATION_MODE)) {
                         dialogInterface.dismiss();
                         setOnDeviceRotationMode();
+                    } else {
+                        if (mModeItems[i].equals(mManager.JOYSTICK_MODE_HOR)) {
+                            dialogInterface.dismiss();
+                            setOnJoystickMode(false);
+                        }
                     }
                 }
             }
@@ -256,14 +288,14 @@ public class DriveActivity extends AppCompatActivity {
     /*****************************************************************************
      * *****************************  MODES SETUP  *******************************/
     private void setOnDeviceRotationMode() {
-        if (!mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
+        if (!mManager.getDataSource().equals(mManager.DEVICE_ROTATION_MODE)) {
             // Setting the current control mode
-            mManager.setDataSource(DrivingDataManager.ROTATION_MODE);
+            mManager.setDataSource(mManager.DEVICE_ROTATION_MODE);
 
             int orientation = getResources().getConfiguration().orientation;
             if (orientation != Configuration.ORIENTATION_LANDSCAPE) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                
+
             } else {
                 // Turn visible the device icon
                 ivIcon = findViewById(R.id.activity_driving_icon);
@@ -279,57 +311,62 @@ public class DriveActivity extends AppCompatActivity {
         }
     }
 
-    private void setOnJoystickMode() {
-        if (!mManager.getDataSource().equals(DrivingDataManager.JOYSTICK_MODE)) {
+    private void setOnJoystickMode(boolean verticalMode) {
 
-            int orientation = getResources().getConfiguration().orientation;
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                if (mManager.getDataSource().equals(DrivingDataManager.ROTATION_MODE)) {
-                    if (ivIcon != null) {
-                        ivIcon.setVisibility(View.GONE);
-                        // Stopping Service from reading rotation data
-                        try {
-                            TiltService.stopService();
-                            this.unregisterReceiver(tiltReceiver);
-                        } catch (Exception e) {
-                            //e.printStackTrace();
-                        }
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (ivIcon == null) ivIcon = findViewById(R.id.activity_driving_icon);
+            ivIcon.setVisibility(View.GONE);
+            if (mManager.getDataSource().equals(mManager.DEVICE_ROTATION_MODE)) {
+                if (ivIcon != null) {
+                    ivIcon.setVisibility(View.GONE);
+                    // Stopping Service from reading rotation data
+                    try {
+                        TiltService.stopService();
+                        this.unregisterReceiver(tiltReceiver);
+                    } catch (Exception e) {
+                        //e.printStackTrace();
                     }
                 }
             }
 
-            // Setting the current control mode
-            mManager.setDataSource(DrivingDataManager.JOYSTICK_MODE);
-
-            if (jvControl == null) {
-                jvControl = findViewById(R.id.activity_driving_joystick);
+            if (verticalMode) {
+                // Setting the current control mode
+                mManager.setDataSource(mManager.JOYSTICK_MODE_VERT);
+                // Forcing Screen Orientation as desired
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            } else {
+                // Setting the current control mode
+                mManager.setDataSource(mManager.JOYSTICK_MODE_HOR);
+                initJoystick();
             }
-            // Make invisible the joystick command
-            jvControl.setVisibility(View.VISIBLE);
-            jvControl.setOnMoveListener(new JoystickView.OnMoveListener() {
-                @Override
-                public void onMove(int angle, int strength) {
-                    int turn = JoystickUtils.getDirectionFromParams(angle, strength);
-                    Log.d(TAG, "Current direction: " + turn);
-                    mManager.setTurn(turn);
-                }
-            });
+        } else {
+            if (verticalMode) {
+                // Setting the current control mode
+                mManager.setDataSource(mManager.JOYSTICK_MODE_VERT);
+                initJoystick();
+            } else {
+                mManager.setDataSource(mManager.JOYSTICK_MODE_HOR);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
         }
+    }
+
+    private void initJoystick() {
+        if (jvControl == null) jvControl = findViewById(R.id.act_driving_joystick);
+        // Make invisible the joystick command
+        jvControl.setVisibility(View.VISIBLE);
+        jvControl.setOnMoveListener(new JoystickView.OnMoveListener() {
+            @Override
+            public void onMove(int angle, int strength) {
+                int turn = JoystickUtils.getDirectionFromParams(angle, strength);
+                Log.d(TAG, "Current direction: " + turn);
+                mManager.setTurn(turn);
+            }
+        });
     }
 
     /** IntentFilter to configure the broadcast receiver */
     private IntentFilter intentFilter = new IntentFilter(TiltService.TILT_DATA_UPDATED);
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        int orientation = getResources().getConfiguration().orientation;
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                if (mManager.getDataSource().equals(DrivingDataManager.JOYSTICK_MODE)) {
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                }
-            }
-        }
-    }
 }
