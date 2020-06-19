@@ -39,7 +39,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/activity_driving_back"
+                android:id="@+id/act_driving_back_hor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
@@ -48,7 +48,7 @@
                 android:textColor="@color/colorPrimaryDark" />
 
             <Button
-                android:id="@+id/activity_driving_mode"
+                android:id="@+id/act_driving_mode_hor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/colorOrangeSalle"
@@ -89,18 +89,20 @@
                     android:orientation="vertical">
 
                     <Button
-                        android:id="@+id/activity_driving_slow_btn"
+                        android:id="@+id/act_driving_slow_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
+                        android:textColor="@color/colorPrimaryDark"
                         android:backgroundTint="@android:color/white"
                         android:padding="5dp"
                         android:text="Slow" />
 
                     <Button
-                        android:id="@+id/activity_driving_normal_btn"
+                        android:id="@+id/act_driving_normal_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
                         android:backgroundTint="@android:color/white"
                         android:padding="5dp"
                         android:text="Normal" />
@@ -113,19 +115,21 @@
                     android:orientation="vertical">
 
                     <Button
-                        android:id="@+id/activity_driving_slowest_btn"
+                        android:id="@+id/act_driving_slowest_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
+                        android:textColor="@color/colorPrimaryDark"
                         android:backgroundTint="@android:color/white"
                         android:padding="5dp"
                         android:text="Bus" />
 
 
                     <Button
-                        android:id="@+id/activity_driving_fast_btn"
+                        android:id="@+id/act_driving_fast_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
                         android:backgroundTint="@android:color/white"
                         android:padding="5dp"
                         android:text="Fast" />
@@ -148,7 +152,7 @@
     </LinearLayout>
 
     <io.github.controlwear.virtual.joystick.android.JoystickView
-        android:id="@+id/activity_driving_joystick"
+        android:id="@+id/act_driving_joystick"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         app:JV_backgroundColor="@color/colorPrimaryDark"

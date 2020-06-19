@@ -104,6 +104,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginTop="10dp"
         android:padding="15dp"
+        android:textColor="@color/colorPrimaryDark"
         android:backgroundTint="@android:color/white"
         android:text="@string/preferences_connection_disconnect"
         app:layout_constraintTop_toBottomOf="@+id/view"/>

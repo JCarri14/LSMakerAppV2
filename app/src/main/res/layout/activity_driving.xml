@@ -8,53 +8,56 @@
     android:layout_height="match_parent"
     style="@style/GeneralConfiguration">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="10dp"
-        android:text="@string/driving_activity_title"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
     <LinearLayout
+        android:id="@+id/top_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/activity_driving_back"
+        <ImageView
+            android:id="@+id/act_driving_back"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:maxHeight="30dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/ic_back"/>
+
+        <TextView
+            android:id="@+id/textView2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:backgroundTint="@android:color/white"
-            android:text="@string/action_back"
-            android:textColor="@color/colorPrimaryDark" />
+            android:layout_gravity="center"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:text="@string/driving_activity_title"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/activity_driving_mode"
-            android:layout_width="0dp"
+        <ImageButton
+            android:id="@+id/act_driving_mode"
+            android:layout_width="45dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:backgroundTint="@color/colorOrangeSalle"
-            android:text="Mode"
-            android:textColor="@color/colorPrimaryDark" />
+            android:padding="5dp"
+            android:background="@drawable/back_white_rad"
+            android:src="@drawable/ic_controller"/>
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/separator_line_1"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/top_layout" />
+
     <io.github.controlwear.virtual.joystick.android.JoystickView
-        android:id="@+id/activity_driving_joystick"
+        android:id="@+id/act_driving_joystick"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         app:JV_backgroundColor="@color/colorPrimaryDark"
@@ -88,7 +91,7 @@
             android:textSize="25sp" />
 
         <com.warkiz.widget.IndicatorSeekBar
-            android:id="@+id/activity_driving_seekBar"
+            android:id="@+id/act_driving_seekBar"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@drawable/back_white_rad"
@@ -117,7 +120,7 @@
         tools:layout_editor_absoluteX="16dp">
 
         <Button
-            android:id="@+id/activity_driving_slowest_btn"
+            android:id="@+id/act_driving_slowest_btn"
             style="@style/SpeedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -125,7 +128,7 @@
             android:text="Bus" />
 
         <Button
-            android:id="@+id/activity_driving_slow_btn"
+            android:id="@+id/act_driving_slow_btn"
             style="@style/SpeedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -134,7 +137,7 @@
             android:text="Slow" />
 
         <Button
-            android:id="@+id/activity_driving_normal_btn"
+            android:id="@+id/act_driving_normal_btn"
             style="@style/SpeedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -143,7 +146,7 @@
             android:text="Normal" />
 
         <Button
-            android:id="@+id/activity_driving_fast_btn"
+            android:id="@+id/act_driving_fast_btn"
             style="@style/SpeedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

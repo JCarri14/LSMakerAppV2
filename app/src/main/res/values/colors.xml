@@ -12,5 +12,6 @@
 
     <color name="colorConnected">#00c853</color>
     <color name="colorError">#cc0000</color>
+    <color name="colorWhite">#FFF</color>
 
 </resources>
