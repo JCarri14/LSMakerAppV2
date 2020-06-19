@@ -80,5 +80,8 @@
     <string name="action_back">Endarrere</string>
     <string name="connection_action_connect">Connectant</string>
     <string name="connection_action_stoped">Connexió aturada</string>
+    <string name="driving_mode_joystick_vert">Joystick (Vertical)</string>
+    <string name="driving_mode_joystick_hor">Joystick (Horizontal)</string>
+    <string name="driving_mode_device_rotation">Rotació dispositiu</string>
 
 </resources>

@@ -81,6 +81,9 @@
     <string name="action_back">Atrás</string>
     <string name="connection_action_connect">Conectando</string>
     <string name="connection_action_stoped">Conexión interrumpida</string>
+    <string name="driving_mode_joystick_vert">Joystick (Vertical)</string>
+    <string name="driving_mode_joystick_hor">Joystick (Horizontal)</string>
+    <string name="driving_mode_device_rotation">Rotación dispositivo</string>
 
 
 </resources>

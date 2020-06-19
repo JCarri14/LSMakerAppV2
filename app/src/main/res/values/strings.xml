@@ -34,6 +34,11 @@
 
     <string name="driving_speed_title">Speed</string>
 
+    <string name="driving_mode_joystick_vert">Joystick (Vertical)</string>
+    <string name="driving_mode_joystick_hor">Joystick (Horizontal)</string>
+    <string name="driving_mode_device_rotation">Device Rotation</string>
+
+
     <string name="navigation_drawer_open">Open navigation menu</string>
     <string name="navigation_drawer_close">Close navigation menu</string>
     <string name="action_settings">Configuration</string>
