@@ -41,7 +41,7 @@ public class DriveActivity extends AppCompatActivity {
     private ImageView btnBack;
     private ImageButton btnMode;
     private Button btnBackHor, btnModeHor;
-    private Button btnSlowest, btnSlow, btnNormal, btnFast;
+    private Button btnPlay, btnSlowest, btnSlow, btnNormal, btnFast;
     private ImageView ivIcon;
     private JoystickView jvControl;
     private IndicatorSeekBar iVelocity;
@@ -106,6 +106,32 @@ public class DriveActivity extends AppCompatActivity {
             Intent mDataSenderServiceIntent = new Intent(this, DataSenderService.class);
             startService(mDataSenderServiceIntent);
         }
+        int orientation = getResources().getConfiguration().orientation;
+        if (mManager != null && orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            btnPlay = findViewById(R.id.act_driving_play_btn);
+            btnPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (btnPlay.getText().toString().equals(getString(R.string.driving_action_start))) {
+                        btnPlay.setText(getString(R.string.driving_action_stop));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            btnPlay.setBackgroundTintList(getResources().getColorStateList(R.color.colorError));
+                        } else {
+                            btnPlay.setBackgroundColor(ContextCompat.getColor(DriveActivity.this, R.color.colorError));
+                        }
+                        mManager.setSpeed(50);
+                    } else {
+                        btnPlay.setText(getString(R.string.driving_action_start));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            btnPlay.setBackgroundTintList(getResources().getColorStateList(R.color.colorSalle));
+                        } else {
+                            btnPlay.setBackgroundColor(ContextCompat.getColor(DriveActivity.this, R.color.colorSalle));
+                        }
+                        mManager.setSpeed(0);
+                    }
+                }
+            });
+        }
         if (mManager != null && mManager.getDataSource().equals(mManager.DEVICE_ROTATION_MODE)) {
             // Turn visible the device icon
             ivIcon = findViewById(R.id.activity_driving_icon);
@@ -120,6 +146,7 @@ public class DriveActivity extends AppCompatActivity {
         } else {
             initJoystick();
         }
+
     }
 
     private void initViews() {
@@ -184,6 +211,30 @@ public class DriveActivity extends AppCompatActivity {
                 @Override
                 public void onStopTrackingTouch(IndicatorSeekBar seekBar) {
                     mManager.setSpeed(seekBar.getProgress());
+                }
+            });
+        } else {
+            btnPlay = findViewById(R.id.act_driving_play_btn);
+            btnPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (btnPlay.getText().toString().equals(getString(R.string.driving_action_start))) {
+                        btnPlay.setText(getString(R.string.driving_action_stop));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            btnPlay.setBackgroundTintList(getResources().getColorStateList(R.color.colorError));
+                        } else {
+                            btnPlay.setBackgroundColor(ContextCompat.getColor(DriveActivity.this, R.color.colorError));
+                        }
+                        mManager.setSpeed(50);
+                    } else {
+                        btnPlay.setText(getString(R.string.driving_action_start));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            btnPlay.setBackgroundTintList(getResources().getColorStateList(R.color.colorSalle));
+                        } else {
+                            btnPlay.setBackgroundColor(ContextCompat.getColor(DriveActivity.this, R.color.colorSalle));
+                        }
+                        mManager.setSpeed(0);
+                    }
                 }
             });
         }

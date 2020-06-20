@@ -349,10 +349,14 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         if (status) {
             View contextView = findViewById(R.id.activity_scan_coordinator);
             Snackbar.make(contextView, R.string.bluetooth_state_stop_scan, Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(getResources().getColor(R.color.colorWhite))
+                    .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
                     .show();
         } else {
             View contextView = findViewById(R.id.activity_scan_coordinator);
             Snackbar.make(contextView, R.string.bluetooth_state_scanning, Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(getResources().getColor(R.color.colorWhite))
+                    .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
                     .show();
         }
     }
@@ -361,10 +365,14 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         if (status) {
             View contextView = findViewById(R.id.activity_scan_coordinator);
             Snackbar.make(contextView, R.string.connection_action_connect, Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(getResources().getColor(R.color.colorWhite))
+                    .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
                     .show();
         } else {
             View contextView = findViewById(R.id.activity_scan_coordinator);
             Snackbar.make(contextView, R.string.connection_state_connected, Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(getResources().getColor(R.color.colorWhite))
+                    .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
                     .show();
         }
     }
@@ -372,6 +380,8 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     private void showConnectionStopped() {
         View contextView = findViewById(R.id.activity_scan_coordinator);
         Snackbar.make(contextView, R.string.connection_action_stoped, Snackbar.LENGTH_SHORT)
+                .setBackgroundTint(getResources().getColor(R.color.colorWhite))
+                .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
                 .show();
     }
 

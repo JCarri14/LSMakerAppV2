@@ -45,9 +45,11 @@ public class ConfigActivity extends AppCompatActivity {
         btnDisconnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean res = BluetoothService.getInstance().disconnect();
-                setDefaultDeviceInformation();
-                showConnectionResult(res);
+                if (BluetoothService.getInstance().getDevice() != null) {
+                    boolean res = BluetoothService.getInstance().disconnect();
+                    setDefaultDeviceInformation();
+                    showConnectionResult(res);
+                }
             }
         });
 
@@ -77,10 +79,14 @@ public class ConfigActivity extends AppCompatActivity {
         if (result) {
             View contextView = findViewById(R.id.preferences_coordinator);
             Snackbar.make(contextView, R.string.bluetooth_disconnection_ok, Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(getResources().getColor(R.color.colorWhite))
+                    .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
                     .show();
         } else {
             View contextView = findViewById(R.id.preferences_coordinator);
             Snackbar.make(contextView, R.string.bluetooth_disconnection_ko, Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(getResources().getColor(R.color.colorWhite))
+                    .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
                     .show();
         }
     }

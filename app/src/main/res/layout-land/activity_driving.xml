@@ -139,12 +139,12 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/activity_driving_play"
+                android:id="@+id/act_driving_play_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/colorSalle"
                 android:padding="10dp"
-                android:text="Play"
+                android:text="@string/driving_action_start"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
         </LinearLayout>
