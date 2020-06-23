@@ -58,6 +58,8 @@ public class UartService extends Service {
     private BluetoothGatt mBluetoothGatt;
     private int mConnectionState = STATE_DISCONNECTED;
 
+    private String deviceAddress;
+
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
@@ -218,7 +220,7 @@ public class UartService extends Service {
             Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
         }
-
+        deviceAddress = address;
         // Previously connected device.  Try to reconnect.
         if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
                 && mBluetoothGatt != null) {
@@ -256,6 +258,7 @@ public class UartService extends Service {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
+        deviceAddress = null;
         mBluetoothGatt.disconnect();
         //mBluetoothGatt.close();
     }
@@ -328,6 +331,10 @@ public class UartService extends Service {
     }
     
     public void writeRXCharacteristic(byte[] value) {
+        if (mBluetoothGatt == null) {
+            final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(deviceAddress);
+            mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+        }
        	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
     	showMessage("mBluetoothGatt null"+ mBluetoothGatt);
     	if (RxService == null) {

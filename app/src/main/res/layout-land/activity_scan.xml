@@ -130,8 +130,9 @@
         android:id="@+id/activity_scan_coordinator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="16dp"></androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_marginBottom="10dp">
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

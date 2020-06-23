@@ -79,6 +79,7 @@ public class DriveActivity extends AppCompatActivity {
 
         mModeItems = new CharSequence[]{mManager.JOYSTICK_MODE_VERT, mManager.JOYSTICK_MODE_HOR,
                         mManager.DEVICE_ROTATION_MODE};
+        TiltService.initializeService(this);
         initViews();
     }
 

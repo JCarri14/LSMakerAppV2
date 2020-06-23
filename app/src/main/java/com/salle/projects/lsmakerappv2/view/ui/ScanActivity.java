@@ -181,7 +181,9 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     }
 
     private void initViewModel() {
-        mViewModel = new ViewModelProvider(ScanActivity.this).get(ScanViewModel.class);
+        if (mViewModel == null) {
+            mViewModel = new ViewModelProvider(ScanActivity.this).get(ScanViewModel.class);
+        }
         mViewModel.getBluetoothDevices().observe(this, btDevices -> {
             if (mRecyclerView == null) {
                 mRecyclerView = findViewById(R.id.activity_scan_recyclerView);
@@ -262,6 +264,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
                 LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
                 mRecyclerView.setLayoutManager(manager);
                 mRecyclerView.setAdapter(mItemAdapter);
+                initViewModel();
             }
         }
         registerReceiver(scanningReceiver, intentFilter);
@@ -491,7 +494,12 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     @Override
     public void onItemClick(Object obj) {
-        mSelectedDevice = (BtDevice) obj;
+         String newDeviceName = ((BtDevice) obj).getName();
+        if (mSelectedDevice == null || !mSelectedDevice.getName().equals(newDeviceName)) {
+            mSelectedDevice = (BtDevice) obj;
+        } else {
+            mSelectedDevice = null;
+        }
     }
 
     /*****************************************************************************
