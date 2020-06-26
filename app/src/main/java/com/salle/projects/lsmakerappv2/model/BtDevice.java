@@ -2,7 +2,14 @@ package com.salle.projects.lsmakerappv2.model;
 
 import android.bluetooth.BluetoothDevice;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "devices")
 public class BtDevice {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
 
     private String name;
     private String address;
@@ -12,6 +19,16 @@ public class BtDevice {
         this.name = name;
         this.address = address;
         this.rssiValue = rssi;
+    }
+
+    public BtDevice() {}
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
