@@ -30,10 +30,6 @@
     <string name="driving_speed_title">Velocitat</string>
 
 
-
-    <string name="navigation_drawer_open">Obre el menú de navegació</string>
-    <string name="navigation_drawer_close">Tanca el menú de navegació</string>
-
     <string name="action_settings">Configuració</string>
     <string name="menu_driving_mode">Mode conducció</string>
     <string name="configuration_menu_title">Configuració</string>
@@ -88,5 +84,14 @@
     <string name="driving_speed_normal">Normal</string>
     <string name="driving_speed_fast">Ràpid</string>
     <string name="connection_action_disconnect">Desconnectant</string>
+    <string name="hint_input_filter">Introdueix un text</string>
+    <string name="action_done">Fet</string>
+    <string name="action_cancel">Cancel·lar</string>
+    <string name="action_options">Opcions</string>
+    <string name="options_previous_devices">Dispositius prèviament emparellats</string>
+    <string name="options_recent_devices">Dispositius recents</string>
+    <string name="filter_popup_title">Filtrar per nom</string>
+    <string name="device_default_name">Nom dispositiu</string>
+    <string name="device_default_address">Adreça dispositiu</string>
 
 </resources>

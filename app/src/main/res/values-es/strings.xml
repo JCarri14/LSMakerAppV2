@@ -32,9 +32,6 @@
     <string name="driving_speed_title">Velocidad</string>
 
 
-    <string name="navigation_drawer_open">Abre el menú de navegación</string>
-    <string name="navigation_drawer_close">Cierra el menú de navegación</string>
-
     <string name="action_settings">Configuración</string>
     <string name="menu_driving_mode">Modo conducción</string>
     <string name="configuration_menu_title">Configuración</string>
@@ -65,7 +62,7 @@
     <string name="location_not_granted_message">Para poder descubrir nuevos dispositivos LsMaker, es necesario disponer de los permisos de localización.</string>
     <string name="bluetooth_not_granted_title">Permisos de activación de Bluetooth</string>
     <string name="bluetooth_not_granted_message">Para poder descubrir nuevos dispositivos LsMaker, es necesario activar el Bluetooth.</string>
-    <string name="connection_devices_list_title">Dispositivos al alcance</string>
+    <string name="connection_devices_list_title">Dispositivos</string>
     <string name="connection_check_previous">Comprobar conexiones anteriores</string>
     <string name="connection_devices_list_tip">Elige el dispositivo al que te quieres conectar</string>
     <string name="connection_device_not_found_text">No se han encontrado dispositivos al alcance</string>
@@ -89,6 +86,15 @@
     <string name="driving_speed_normal">Normal</string>
     <string name="driving_speed_fast">Rápido</string>
     <string name="connection_action_disconnect">Desconectando</string>
+    <string name="action_done">Hecho</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="hint_input_filter">Introduce un texto</string>
+    <string name="action_options">Opciones</string>
+    <string name="options_previous_devices">Dispositivos previamente emparejados</string>
+    <string name="options_recent_devices">Dispositivos recientes</string>
+    <string name="device_default_name">Nombre dispositivo</string>
+    <string name="device_default_address">Direcció dispositivo</string>
+    <string name="filter_popup_title">Filtrar por nombre</string>
 
 
 </resources>

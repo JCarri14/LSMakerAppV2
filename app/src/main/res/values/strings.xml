@@ -11,16 +11,40 @@
     <string name="connection_action_disconnect">Disconnecting...</string>
     <string name="connection_action_stoped">Connection stopped</string>
 
+    <!-- Hints -->
     <string name="hint_device_name">Device\'s name</string>
     <string name="hint_device_name_alt">&lt;no device&gt;</string>
     <string name="hint_pin">Pin code</string>
+    <string name="hint_input_filter">Insert any text </string>
+
+    <!-- Actions -->
+    <string name="action_done">Done</string>
+    <string name="action_cancel">Cancel</string>
     <string name="action_back">Back</string>
     <string name="action_sign_in">Connect with the device</string>
     <string name="action_sign_in_short">Connect</string>
+    <string name="action_settings">Configuration</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_options">Options</string>
+
+    <!-- Options bottom sheet -->
+    <string name="options_previous_devices">Previously paired devices:</string>
+    <string name="options_recent_devices">Recent devices:</string>
+
+    <!-- Filter -->
+    <string name="filter_popup_title">Filter by device\'s name:</string>
+
+    <!-- Device -->
+    <string name="device_default_name">Device name</string>
+    <string name="device_default_address">Device Address</string>
+
+    <!-- Errors -->
     <string name="error_invalid_device_name">The device\'s name is too short</string>
     <string name="error_invalid_pincode">The pin code is too short</string>
     <string name="error_field_required">Can\'t leave the field empty</string>
     <string name="error_incorrect_credentials">Couldn\'t connect to the device, check the fields</string>
+
+    <!-- Messages -->
     <string name="connecting_message">Connecting, please wait...</string>
     <string name="connection_error_title">Connection error</string>
     <string name="pop_up_accept">Accept</string>
@@ -43,11 +67,7 @@
     <string name="driving_mode_joystick_hor">Joystick (Horizontal)</string>
     <string name="driving_mode_device_rotation">Device Rotation</string>
 
-
-    <string name="navigation_drawer_open">Open navigation menu</string>
-    <string name="navigation_drawer_close">Close navigation menu</string>
-    <string name="action_settings">Configuration</string>
-    <string name="action_filter">Filter</string>
+    <!-- Title labels -->
     <string name="menu_driving_mode">Driving mode</string>
     <string name="configuration_menu_title">Configuration</string>
     <string name="configuration_label">Configuration</string>

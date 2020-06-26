@@ -30,6 +30,14 @@
         <item name="android:padding">16dp</item>
     </style>
 
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetDialogStyle</item>
+    </style>
+
+    <style name="BottomSheetDialogStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:background">@drawable/back_white_blue_rad</item>
+    </style>
+
     <style name="SalleButton" parent="android:TextAppearance.Small">
         <item name="android:background">@android:color/white</item>
         <item name="android:textColor">@color/colorSalle</item>
