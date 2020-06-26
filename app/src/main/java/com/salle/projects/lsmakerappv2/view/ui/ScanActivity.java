@@ -572,6 +572,7 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
 
             if (success) {
                 mConnectDialog.dismiss();
+                mOptionViewModel.insert(this.device);
                 onDeviceConnected();
             } else {
                 showConnectionErrorPopUp(getString(R.string.connection_error_message));
