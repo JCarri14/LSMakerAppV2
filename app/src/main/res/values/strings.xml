@@ -30,6 +30,7 @@
     <!-- Options bottom sheet -->
     <string name="options_previous_devices">Previously paired devices:</string>
     <string name="options_recent_devices">Recent devices:</string>
+    <string name="options_no_devices_found">No devices found</string>
 
     <!-- Filter -->
     <string name="filter_popup_title">Filter by device\'s name:</string>

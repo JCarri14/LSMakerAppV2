@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -311,10 +312,17 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
 
+        TextView tvNoDevices = view.findViewById(R.id.item_options_no_devices_label);
+
         if (mOptionViewModel == null) {
             mOptionViewModel = new ViewModelProvider(ScanActivity.this).get(OptionViewModel.class);
         }
         mOptionViewModel.getDevices().observe(this, btDevices -> {
+            if(btDevices.size() == 0) {
+                tvNoDevices.setVisibility(View.VISIBLE);
+            } else {
+                tvNoDevices.setVisibility(View.GONE);
+            }
             OptionItemAdapter mItemAdapter = new OptionItemAdapter(this, btDevices);
             recyclerView.setAdapter(mItemAdapter);
         });
