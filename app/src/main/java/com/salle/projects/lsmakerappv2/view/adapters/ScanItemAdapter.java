@@ -1,6 +1,5 @@
 package com.salle.projects.lsmakerappv2.view.adapters;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -15,11 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.projects.lsmakerappv2.R;
 import com.salle.projects.lsmakerappv2.model.BtDevice;
-import com.salle.projects.lsmakerappv2.view.callbacks.ScanItemCallback;
-import com.salle.projects.lsmakerappv2.view.ui.ScanActivity;
+import com.salle.projects.lsmakerappv2.view.callbacks.ListItemCallback;
 
 import java.util.List;
-import java.util.Map;
 
 public class ScanItemAdapter extends RecyclerView.Adapter<ScanItemAdapter.ViewHolder>
 implements AdapterView.OnItemClickListener {
@@ -28,11 +25,11 @@ implements AdapterView.OnItemClickListener {
 
     private List<BtDevice> mDevices;
     private int currentItem = -1;
-    private ScanItemCallback mCallback;
+    private ListItemCallback mCallback;
     private Context mContext;
 
 
-    public ScanItemAdapter(Context context, ScanItemCallback callback, List<BtDevice> devices) {
+    public ScanItemAdapter(Context context, ListItemCallback callback, List<BtDevice> devices) {
         mDevices = devices;
         mContext = context;
         mCallback = callback;
