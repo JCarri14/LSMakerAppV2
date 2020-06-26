@@ -1,12 +1,7 @@
 package com.salle.projects.lsmakerappv2.view.ui;
 
 import android.Manifest;
-import android.app.Activity;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,50 +11,57 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.salle.projects.lsmakerappv2.R;
 import com.salle.projects.lsmakerappv2.bluetooth.BluetoothService;
 import com.salle.projects.lsmakerappv2.model.BtDevice;
 import com.salle.projects.lsmakerappv2.services.UartService;
-import com.salle.projects.lsmakerappv2.utils.Utils;
+import com.salle.projects.lsmakerappv2.view.adapters.OptionItemAdapter;
 import com.salle.projects.lsmakerappv2.view.adapters.ScanItemAdapter;
-import com.salle.projects.lsmakerappv2.view.callbacks.ScanItemCallback;
+import com.salle.projects.lsmakerappv2.view.callbacks.ListItemCallback;
+import com.salle.projects.lsmakerappv2.viewmodel.OptionViewModel;
 import com.salle.projects.lsmakerappv2.viewmodel.ScanViewModel;
 
-import java.util.List;
-
-public class ScanActivity extends AppCompatActivity implements ScanItemCallback {
+public class ScanActivity extends AppCompatActivity implements ListItemCallback {
 
     // UI
-    private Button btnBack, btnScan, btnConnect, btnFilter;
+    private Button btnOptions, btnScan, btnDisconnect, btnFilter;
+    private ImageButton btnBack;
     private RecyclerView mRecyclerView;
     private ScanItemAdapter mItemAdapter;
+    private EditText etInput;
 
     // Filter Dialog
     private CharSequence[] mFilterItems = new CharSequence[]{"lsmaker"};
     private boolean[] mCheckedFilterItems = new boolean[]{false};
 
+    // Options Bottom Sheet
+    private  BottomSheetDialog bsDialog;
+
     // Connection Dialog
     private AlertDialog mConnectDialog;
 
-
     // ViewModel
     private ScanViewModel mViewModel;
+    private OptionViewModel mOptionViewModel;
 
     // Bluetooth
     private static final int REQUEST_ENABLE_BT = 1;
@@ -141,11 +143,20 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     private void initViews() {
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.activity_scan_recyclerView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.act_scan_recyclerView);
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         mRecyclerView.setLayoutManager(manager);
 
-        btnBack = findViewById(R.id.activity_scan_back_btn);
+        etInput = findViewById(R.id.act_scan_input_filter);
+        etInput.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                mViewModel.setFilter(etInput.getText().toString());
+                return true;
+            }
+        });
+
+        btnBack = findViewById(R.id.act_scan_back_btn);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -153,7 +164,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             }
         });
 
-        btnScan = (Button) findViewById(R.id.activity_scan_btn);
+        btnScan = (Button) findViewById(R.id.act_scan_btn);
         btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,16 +172,30 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             }
         });
 
-        btnConnect = (Button) findViewById(R.id.activity_scan_connect_btn);
+        btnDisconnect = (Button) findViewById(R.id.act_scan_disconnect_btn);
         // Check if we are already connected to a device
-        if (mBluetoothService.getDevice() != null) {
-            btnConnect.setText(R.string.preferences_connection_disconnect);
-            connectButtonSetDisconnect();
-        } else {
-            connectButtonSetConnect();
-        }
+        btnDisconnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mBluetoothService.getDevice() != null) {
+                    btnDisconnect.setVisibility(View.GONE);
+                    displayConnectDialog(false);
+                    mBluetoothService.disconnect();
+                    mBluetoothService.setDevice(null);
+                    mConnectDialog.dismiss();
+                }
+            }
+        });
 
-        btnFilter = (Button) findViewById(R.id.activity_scan_filter_btn);
+        btnOptions = (Button) findViewById(R.id.act_scan_options_btn);
+        btnOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayOptionsBottomSheet();
+            }
+        });
+
+        btnFilter = findViewById(R.id.act_scan_filter_btn);
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,7 +211,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         }
         mViewModel.getBluetoothDevices().observe(this, btDevices -> {
             if (mRecyclerView == null) {
-                mRecyclerView = findViewById(R.id.activity_scan_recyclerView);
+                mRecyclerView = findViewById(R.id.act_scan_recyclerView);
             }
             mItemAdapter = new ScanItemAdapter(ScanActivity.this, ScanActivity.this, btDevices);
             mRecyclerView.setAdapter(mItemAdapter);
@@ -194,46 +219,15 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         });
     }
 
-    private void connectButtonSetConnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            btnConnect.setBackgroundTintList(getResources().getColorStateList(R.color.colorConnected));
+    private void doConnectionAction() {
+        if (mSelectedDevice != null) {
+            mBluetoothService.setDevice(mSelectedDevice);
+            displayConnectDialog(true);
+            attemptLogin(mSelectedDevice);
+            mSelectedDevice = null;
         } else {
-            btnConnect.setBackgroundColor(ContextCompat.getColor(this, R.color.colorConnected));
+            showNoDeviceSelectedPopUp();
         }
-        btnConnect.setText(R.string.connection_action);
-        btnConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mSelectedDevice != null) {
-                    mBluetoothService.setDevice(mSelectedDevice);
-                    displayConnectDialog(true);
-                    attemptLogin(mSelectedDevice);
-                    mSelectedDevice = null;
-                    connectButtonSetDisconnect();
-                } else {
-                    showNoDeviceSelectedPopUp();
-                }
-            }
-        });
-    }
-
-    private void connectButtonSetDisconnect() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            btnConnect.setBackgroundTintList(getResources().getColorStateList(R.color.colorError));
-        } else {
-            btnConnect.setBackgroundColor(ContextCompat.getColor(this, R.color.colorError));
-        }
-        btnConnect.setText(R.string.preferences_connection_disconnect);
-        btnConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                displayConnectDialog(false);
-                mBluetoothService.disconnect();
-                mBluetoothService.setDevice(null);
-                connectButtonSetConnect();
-                mConnectDialog.dismiss();
-            }
-        });
     }
 
     private void service_init() {
@@ -258,7 +252,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
             mBluetoothService.enableBluetooth(this, REQUEST_ENABLE_BT);
             showScanningProgress(true);
 
-            mRecyclerView = (RecyclerView) findViewById(R.id.activity_scan_recyclerView);
+            mRecyclerView = (RecyclerView) findViewById(R.id.act_scan_recyclerView);
             if (mRecyclerView != null) {
                 mItemAdapter = new ScanItemAdapter(this, this, null);
                 LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -290,6 +284,10 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         mAuthTask.execute((Void) null);
     }
 
+    private void onDeviceConnected() {
+        gotToMainActivity();
+    }
+
     private void gotToMainActivity() {
         final Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -300,24 +298,53 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
         startActivity(intent);
     }
 
+
+    /*****************************************************************************
+     * ***************************  OPTIONS BOTTOM SHEET  ******************************/
+
+    private void displayOptionsBottomSheet() {
+        bsDialog = new BottomSheetDialog(this, R.style.BottomSheetDialogTheme);
+        View view = LayoutInflater.from(getApplicationContext())
+                .inflate(R.layout.item_options, null);
+
+        RecyclerView recyclerView = view.findViewById(R.id.item_options_recyclerview);
+        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(manager);
+
+        if (mOptionViewModel == null) {
+            mOptionViewModel = new ViewModelProvider(ScanActivity.this).get(OptionViewModel.class);
+        }
+        mOptionViewModel.getDevices().observe(this, btDevices -> {
+            OptionItemAdapter mItemAdapter = new OptionItemAdapter(this, btDevices);
+            recyclerView.setAdapter(mItemAdapter);
+        });
+
+        bsDialog.setContentView(view);
+        bsDialog.setCancelable(true);
+        bsDialog.setDismissWithAnimation(true);
+        bsDialog.show();
+    }
+
     /*****************************************************************************
      * ***************************  FILTER DIALOG  ******************************/
+
     private void displayFilterDialog() {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        builder.setTitle("Filter By Devices Name");
+        builder.setTitle(getString(R.string.filter_popup_title));
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setIcon(getResources().getDrawable(R.drawable.ic_filter, null));
             builder.setBackground(getResources().getDrawable(R.drawable.back_white_rad, null));
         } else {
             builder.setBackground(ContextCompat.getDrawable(this, R.drawable.back_white_rad));
         }
-        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.action_done), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -350,13 +377,13 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
      * ******************************  SNACKBAR  *********************************/
     private void showScanningProgress(boolean status) {
         if (status) {
-            View contextView = findViewById(R.id.activity_scan_coordinator);
+            View contextView = findViewById(R.id.act_scan_coordinator);
             Snackbar.make(contextView, R.string.bluetooth_state_stop_scan, Snackbar.LENGTH_SHORT)
                     .setBackgroundTint(getResources().getColor(R.color.colorWhite))
                     .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
                     .show();
         } else {
-            View contextView = findViewById(R.id.activity_scan_coordinator);
+            View contextView = findViewById(R.id.act_scan_coordinator);
             Snackbar.make(contextView, R.string.bluetooth_state_scanning, Snackbar.LENGTH_SHORT)
                     .setBackgroundTint(getResources().getColor(R.color.colorWhite))
                     .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
@@ -366,13 +393,13 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     private void showConnectionProgress(boolean status) {
         if (status) {
-            View contextView = findViewById(R.id.activity_scan_coordinator);
+            View contextView = findViewById(R.id.act_scan_coordinator);
             Snackbar.make(contextView, R.string.connection_action_connect, Snackbar.LENGTH_SHORT)
                     .setBackgroundTint(getResources().getColor(R.color.colorWhite))
                     .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
                     .show();
         } else {
-            View contextView = findViewById(R.id.activity_scan_coordinator);
+            View contextView = findViewById(R.id.act_scan_coordinator);
             Snackbar.make(contextView, R.string.connection_state_connected, Snackbar.LENGTH_SHORT)
                     .setBackgroundTint(getResources().getColor(R.color.colorWhite))
                     .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
@@ -381,7 +408,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     }
 
     private void showConnectionStopped() {
-        View contextView = findViewById(R.id.activity_scan_coordinator);
+        View contextView = findViewById(R.id.act_scan_coordinator);
         Snackbar.make(contextView, R.string.connection_action_stoped, Snackbar.LENGTH_SHORT)
                 .setBackgroundTint(getResources().getColor(R.color.colorWhite))
                 .setTextColor(getResources().getColor(R.color.colorPrimaryDark))
@@ -486,7 +513,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
     }
 
     /*****************************************************************************
-     * **************************  SCAN ITEM CALLBACK  **************************/
+     * **************************  LIST ITEM CALLBACK  **************************/
      @Override
     public void onItemClick(int index) {
 
@@ -494,12 +521,18 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
     @Override
     public void onItemClick(Object obj) {
-         String newDeviceName = ((BtDevice) obj).getName();
-        if (mSelectedDevice == null || !mSelectedDevice.getName().equals(newDeviceName)) {
-            mSelectedDevice = (BtDevice) obj;
-        } else {
-            mSelectedDevice = null;
-        }
+         if (bsDialog == null || !bsDialog.isShowing()) {
+             String newDeviceName = ((BtDevice) obj).getName();
+             if (mSelectedDevice == null || !mSelectedDevice.getName().equals(newDeviceName)) {
+                 mSelectedDevice = (BtDevice) obj;
+             } else {
+                 mSelectedDevice = null;
+             }
+         } else {
+             mSelectedDevice = (BtDevice) obj;
+             bsDialog.dismiss();
+             //TODO: Check if device can be paired and start connection process
+         }
     }
 
     /*****************************************************************************
@@ -531,7 +564,7 @@ public class ScanActivity extends AppCompatActivity implements ScanItemCallback 
 
             if (success) {
                 mConnectDialog.dismiss();
-                gotToMainActivity();
+                onDeviceConnected();
             } else {
                 showConnectionErrorPopUp(getString(R.string.connection_error_message));
             }
