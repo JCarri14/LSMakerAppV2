@@ -81,7 +81,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/preferences_device_name_title"
+                android:text="@string/preferences_device_label"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
