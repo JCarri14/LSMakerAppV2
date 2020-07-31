@@ -208,8 +208,12 @@ public class BluetoothService {
             } else {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
             }
-            uartService.disconnect();
-            mDevice = null;
+            try {
+                uartService.disconnect();
+                mDevice = null;
+            } catch (NullPointerException e) {
+                Log.d(TAG, e.getMessage());
+            }
         }
         return true;
     }

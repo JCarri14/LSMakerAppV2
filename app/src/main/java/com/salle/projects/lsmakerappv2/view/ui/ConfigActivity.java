@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -24,6 +25,7 @@ public class ConfigActivity extends AppCompatActivity {
 
     private Button btnDisconnect;
     private TextView tvName, tvAddress;
+    private ImageButton btnBack;
     private CheckBox cbMode;
 
     @Override
@@ -50,6 +52,14 @@ public class ConfigActivity extends AppCompatActivity {
                     setDefaultDeviceInformation();
                     showConnectionResult(res);
                 }
+            }
+        });
+
+        btnBack = findViewById(R.id.preferences_back_btn);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
 

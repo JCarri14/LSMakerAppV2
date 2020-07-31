@@ -11,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,11 +151,18 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
         mRecyclerView.setLayoutManager(manager);
 
         etInput = findViewById(R.id.act_scan_input_filter);
-        etInput.setOnKeyListener(new View.OnKeyListener() {
+        etInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mViewModel.setFilter(etInput.getText().toString());
-                return true;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
 
@@ -218,6 +227,10 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
             mRecyclerView.setAdapter(mItemAdapter);
 
         });
+
+        if (mOptionViewModel == null) {
+            mOptionViewModel = new ViewModelProvider(ScanActivity.this).get(OptionViewModel.class);
+        }
     }
 
     private void doConnectionAction() {
@@ -307,7 +320,6 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
         bsDialog = new BottomSheetDialog(this, R.style.BottomSheetDialogTheme);
         View view = LayoutInflater.from(getApplicationContext())
                 .inflate(R.layout.item_options, null);
-
         RecyclerView recyclerView = view.findViewById(R.id.item_options_recyclerview);
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
@@ -425,6 +437,25 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
 
     /*****************************************************************************
      * ******************************  POPUPS  *********************************/
+    private void showConnectionConfirmationPopUp(String deviceName) {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.connection_confirmation))
+                .setMessage(deviceName)
+                .setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        doConnectionAction();
+                    }
+                })
+                .setNegativeButton(getString(R.string.pop_up_close), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mSelectedDevice = null;
+                        dialog.dismiss();
+                    }
+                });
+        builder.show();
+    }
+
     private void showNoDeviceSelectedPopUp() {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.connection_action))
@@ -529,19 +560,16 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
 
     @Override
     public void onItemClick(Object obj) {
-         if (bsDialog == null || !bsDialog.isShowing()) {
-             String newDeviceName = ((BtDevice) obj).getName();
-             if (mSelectedDevice == null || !mSelectedDevice.getName().equals(newDeviceName)) {
-                 mSelectedDevice = (BtDevice) obj;
-             } else {
-                 mSelectedDevice = null;
-             }
-         } else {
-             mSelectedDevice = (BtDevice) obj;
-             bsDialog.dismiss();
-             //TODO: Check if device can be paired and start connection process
-         }
+        mSelectedDevice = (BtDevice) obj;
+        showConnectionConfirmationPopUp(mSelectedDevice.getName());
     }
+    @Override
+    public void onDeleteItem(Object obj) {
+         if (mOptionViewModel != null)
+             mOptionViewModel.delete((BtDevice) obj);
+    }
+
+
 
     /*****************************************************************************
      * ***********************  CONNECTION INNER CLASS  **************************/
