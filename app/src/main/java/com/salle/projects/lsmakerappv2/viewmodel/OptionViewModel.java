@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,7 +18,7 @@ import java.util.List;
 public class OptionViewModel extends AndroidViewModel {
 
     private BtDeviceRepository repository;
-    private MutableLiveData<List<BtDevice>> mDevices;
+    private LiveData<List<BtDevice>> mDevices;
 
     public OptionViewModel(@NonNull Application application) {
         super(application);
@@ -25,10 +26,10 @@ public class OptionViewModel extends AndroidViewModel {
         mDevices = repository.getAllDevices();
     }
 
-    public MutableLiveData<List<BtDevice>> getDevices() {
+    public LiveData<List<BtDevice>> getDevices() {
         if (mDevices == null) {
-            mDevices = new MutableLiveData<List<BtDevice>>();
-            mDevices.setValue(new ArrayList<>());
+            mDevices = new LiveData<List<BtDevice>>() {
+            };
         }
         return mDevices;
     }

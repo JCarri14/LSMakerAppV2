@@ -15,12 +15,13 @@ import java.util.List;
 public class BtDeviceRepository {
 
     private BtDeviceDao deviceDao;
-    private MutableLiveData<List<BtDevice>> allDevices;
+    private LiveData<List<BtDevice>> allDevices;
 
     public BtDeviceRepository(Application application) {
         LSMakerDatabase db = LSMakerDatabase.getInstance(application);
         this.deviceDao = db.deviceDao();
-        new GetAllDevicesAsyncTask(this.deviceDao).execute();
+        allDevices = deviceDao.getAllDevices();
+        //new GetAllDevicesAsyncTask(this.deviceDao).execute();
     }
 
     public void insert(BtDevice device) {
@@ -39,7 +40,7 @@ public class BtDeviceRepository {
         new DeleteAllDevicesAsyncTask(this.deviceDao).execute();
     }
 
-    public MutableLiveData<List<BtDevice>> getAllDevices() {
+    public LiveData<List<BtDevice>> getAllDevices() {
         return this.allDevices;
     }
 
@@ -53,7 +54,7 @@ public class BtDeviceRepository {
 
         @Override
         protected Void doInBackground(BtDevice... btDevices) {
-            deviceDao.instert(btDevices[0]);
+            deviceDao.insert(btDevices[0]);
             return null;
         }
     }
@@ -103,7 +104,7 @@ public class BtDeviceRepository {
         }
     }
 
-    private static class GetAllDevicesAsyncTask extends AsyncTask<Void, Void, LiveData<List<BtDevice>>> {
+    private class GetAllDevicesAsyncTask extends AsyncTask<Void, Void, Void> {
 
         private BtDeviceDao deviceDao;
 
@@ -112,8 +113,9 @@ public class BtDeviceRepository {
         }
 
         @Override
-        protected LiveData<List<BtDevice>> doInBackground(Void... voids) {
-            return deviceDao.getAllDevices();
+        protected Void doInBackground(Void... voids) {
+            BtDeviceRepository.this.allDevices = deviceDao.getAllDevices();
+            return null;
         }
     }
 }

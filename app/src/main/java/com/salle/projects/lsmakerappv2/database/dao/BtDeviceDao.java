@@ -1,6 +1,7 @@
 package com.salle.projects.lsmakerappv2.database.dao;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -15,7 +16,7 @@ import java.util.List;
 public interface BtDeviceDao {
 
     @Insert
-    void instert(BtDevice device);
+    void insert(BtDevice device);
 
     @Update
     void update(BtDevice device);
