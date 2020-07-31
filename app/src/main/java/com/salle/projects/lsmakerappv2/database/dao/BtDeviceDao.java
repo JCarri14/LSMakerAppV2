@@ -30,4 +30,7 @@ public interface BtDeviceDao {
     @Query("SELECT * FROM devices")
     LiveData<List<BtDevice>> getAllDevices();
 
+    @Query("SELECT * FROM devices AS d WHERE d.name LIKE :name LIMIT 1")
+    BtDevice getDeviceByName(String name);
+
 }

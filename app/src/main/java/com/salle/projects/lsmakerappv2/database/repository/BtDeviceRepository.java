@@ -54,7 +54,9 @@ public class BtDeviceRepository {
 
         @Override
         protected Void doInBackground(BtDevice... btDevices) {
-            deviceDao.insert(btDevices[0]);
+            if (deviceDao.getDeviceByName(btDevices[0].getName()) == null) {
+                deviceDao.insert(btDevices[0]);
+            }
             return null;
         }
     }
