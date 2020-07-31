@@ -1,3 +1,114 @@
 <resources>
-    <string name="app_name">LSMakerAppV2</string>
+    <string name="app_name">LSMaker Companion \n La Salle</string>
+
+    <!-- Strings related to login -->
+    <string name="connection_activity_title">Connection</string>
+    <string name="connection_action">Connect</string>
+    <string name="connection_state">State:</string>
+    <string name="connection_state_connected">Connected</string>
+    <string name="connection_state_disconnected">Disconnected</string>
+    <string name="connection_action_connect">Connecting...</string>
+    <string name="connection_action_disconnect">Disconnecting...</string>
+    <string name="connection_action_stoped">Connection stopped</string>
+    <string name="connection_confirmation">Confirm connection with:</string>
+
+    <!-- Hints -->
+    <string name="hint_device_name">Device\'s name</string>
+    <string name="hint_device_name_alt">&lt;no device&gt;</string>
+    <string name="hint_pin">Pin code</string>
+    <string name="hint_input_filter">Insert any text </string>
+
+    <!-- Actions -->
+    <string name="action_done">Done</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_back">Back</string>
+    <string name="action_sign_in">Connect with the device</string>
+    <string name="action_sign_in_short">Connect</string>
+    <string name="action_settings">Configuration</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_options">Options</string>
+
+    <!-- Options bottom sheet -->
+    <string name="options_previous_devices">Previously paired devices:</string>
+    <string name="options_recent_devices">Recent devices:</string>
+    <string name="options_no_devices_found">No devices found</string>
+
+    <!-- Filter -->
+    <string name="filter_popup_title">Filter by device\'s name:</string>
+
+    <!-- Device -->
+    <string name="device_default_name">Device name</string>
+    <string name="device_default_address">Device Address</string>
+
+    <!-- Errors -->
+    <string name="error_invalid_device_name">The device\'s name is too short</string>
+    <string name="error_invalid_pincode">The pin code is too short</string>
+    <string name="error_field_required">Can\'t leave the field empty</string>
+    <string name="error_incorrect_credentials">Couldn\'t connect to the device, check the fields</string>
+
+    <!-- Messages -->
+    <string name="connecting_message">Connecting, please wait...</string>
+    <string name="connection_error_title">Connection error</string>
+    <string name="pop_up_accept">Accept</string>
+    <string name="pop_up_close">Close</string>
+    <string name="connection_error_message">Couldn\'t connect to the device</string>
+
+    <!-- Strings related to driving -->
+    <string name="driving_activity_title">Driving mode</string>
+    <string name="driving_action">Drive</string>
+    <string name="driving_action_start">Start</string>
+    <string name="driving_action_stop">Stop</string>
+
+    <string name="driving_speed_title">Speed</string>
+    <string name="driving_speed_slowest">Bus</string>
+    <string name="driving_speed_slow">Slow</string>
+    <string name="driving_speed_normal">Normal</string>
+    <string name="driving_speed_fast">Fast</string>
+
+    <string name="driving_mode_joystick_vert">Joystick (Vertical)</string>
+    <string name="driving_mode_joystick_hor">Joystick (Horizontal)</string>
+    <string name="driving_mode_device_rotation">Device Rotation</string>
+
+    <!-- Title labels -->
+    <string name="menu_driving_mode">Driving mode</string>
+    <string name="configuration_menu_title">Configuration</string>
+    <string name="configuration_label">Configuration</string>
+    <string name="connection_activity_label">Connection</string>
+
+    <!-- Strings related to preferences -->
+    <string name="preferences_activity_title">Configuration</string>
+
+    <string name="preferences_connection_title">Connection</string>
+    <string name="preferences_connection_disconnect">Disconnect</string>
+
+    <string name="preferences_invert_title">Reverse controls</string>
+    <string name="preferences_invert_description">Reverse the driving controls in driving mode</string>
+
+    <string name="preferences_theme_title">Driving theme</string>
+    <string name="preferences_theme_picker_title">Choose driving theme</string>
+
+    <string name="preferences_device_label">Device:</string>
+    <string name="preferences_device_name_title">Device\'s name:</string>
+    <string name="preferences_device_address_title">Device\'s address:</string>
+
+    <!-- Strings related to Bluetooth connection -->
+    <string name="bluetooth_not_compatible_title">Not compatible with BLE</string>
+    <string name="bluetooth_not_compatible_message">We are sorry, but this device is not compatible with amb Bluetooth Low Energy</string>
+    <string name="location_not_granted_title">Localization permissions</string>
+    <string name="location_not_granted_message">In order to discover new LsMaker devices, localization permissions are needed.</string>
+    <string name="bluetooth_not_granted_title">Bluetooth enabling permissions</string>
+    <string name="bluetooth_not_granted_message">In order to discover new LsMaker devices, Bluetooth must be activated.</string>
+    <string name="connection_devices_list_title">Avaliable devices</string>
+    <string name="connection_check_previous">Check previous connections</string>
+    <string name="connection_devices_list_tip">Choose the device to which want you connect</string>
+    <string name="connection_device_not_found_text">Couldn\'t find avaliable devices</string>
+    <string name="connection_scan_button_text">Scan</string>
+    <string name="bluetooth_not_enabled_toast">This app can\'t work without Bluetooth enabled</string>
+    <string name="bluetooth_enabled_toast">Bluetooth enabled</string>
+    <string name="bluetooth_state_scanning">Scanning...</string>
+    <string name="bluetooth_state_stop_scan">Scanning finished</string>
+    <string name="bluetooth_disconnection_ok">Disconnected from device</string>
+    <string name="bluetooth_disconnection_ko">Couldn\'t disconnect from device</string>
+
+
 </resources>

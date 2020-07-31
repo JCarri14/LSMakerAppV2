@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LSMaker Companion - La Salle</string>
+
+    <!-- Strings related to login -->
+    <string name="connection_activity_title">Conexión</string>
+    <string name="connection_action">Conectarse</string>
+    <string name="connection_state">Estado:</string>
+    <string name="connection_state_connected">Conectado</string>
+    <string name="connection_state_disconnected">Desconectado</string>
+
+
+    <string name="hint_device_name">Nombre del dispositivo</string>
+    <string name="hint_device_name_alt">&lt;ningun dispositivo&gt;</string>
+    <string name="hint_pin">Pin</string>
+    <string name="action_sign_in">Conecta con el dispositivo</string>
+    <string name="action_sign_in_short">Conecta</string>
+    <string name="error_invalid_device_name">El nombre del dispositivo es demasiado corto</string>
+    <string name="error_invalid_pincode">El pin es demasiado corto</string>
+    <string name="error_field_required">El campo no puede estar vacío</string>
+    <string name="error_incorrect_credentials">No se ha podido realizar la conexión, alguno de los campos es incorrecto</string>
+    <string name="connecting_message">Conectando, espere un momento...</string>
+    <string name="connection_error_title">Error de conexión</string>
+    <string name="pop_up_accept">ACEPTAR</string>
+    <string name="pop_up_close">CERRAR</string>
+    <string name="connection_error_message">No se ha podido conectar con el dispositivo</string>
+
+    <!-- Strings related to driving -->
+    <string name="driving_activity_title">Modo conducción</string>
+    <string name="driving_action">Conducir</string>
+    <string name="driving_action_start">Empezar</string>
+    <string name="driving_speed_title">Velocidad</string>
+
+
+    <string name="action_settings">Configuración</string>
+    <string name="menu_driving_mode">Modo conducción</string>
+    <string name="configuration_menu_title">Configuración</string>
+    <string name="configuration_label">Configuración</string>
+    <string name="connection_activity_label">Conexión</string>
+
+
+
+    <!-- Strings related to preferences -->
+    <string name="preferences_activity_title">Configuración</string>
+
+    <string name="preferences_connection_title">conexión</string>
+    <string name="preferences_connection_disconnect">Desconectar</string>
+
+    <string name="preferences_invert_title">Invertir controles</string>
+    <string name="preferences_invert_description">Invierte de posición los controles de conducción</string>
+
+    <string name="preferences_theme_title">Tema de conducción</string>
+    <string name="preferences_theme_picker_title">Elija modo de conducción</string>
+
+    <string name="preferences_device_name_title">Nombre del dispositivo:</string>
+    <string name="preferences_device_address_title">Dirección del dispositivo:</string>
+
+    <!-- Strings related to Bluetooth connection -->
+    <string name="bluetooth_not_compatible_title">No compatible con BLE</string>
+    <string name="bluetooth_not_compatible_message">Lo sentimos, pero este dispositivo no es compatible con Bluetooth Low Energy</string>
+    <string name="location_not_granted_title">Permisos de localización</string>
+    <string name="location_not_granted_message">Para poder descubrir nuevos dispositivos LsMaker, es necesario disponer de los permisos de localización.</string>
+    <string name="bluetooth_not_granted_title">Permisos de activación de Bluetooth</string>
+    <string name="bluetooth_not_granted_message">Para poder descubrir nuevos dispositivos LsMaker, es necesario activar el Bluetooth.</string>
+    <string name="connection_devices_list_title">Dispositivos</string>
+    <string name="connection_check_previous">Comprobar conexiones anteriores</string>
+    <string name="connection_devices_list_tip">Elige el dispositivo al que te quieres conectar</string>
+    <string name="connection_device_not_found_text">No se han encontrado dispositivos al alcance</string>
+    <string name="connection_scan_button_text">Escanear</string>
+    <string name="bluetooth_not_enabled_toast">Sin Bluetooth, la aplicación no puede funcionar</string>
+    <string name="bluetooth_enabled_toast">se ha encendido el Bluetooth</string>
+    <string name="driving_action_stop">Parar</string>
+    <string name="action_filter">Filtrar</string>
+    <string name="bluetooth_state_scanning">Escaneando...</string>
+    <string name="bluetooth_state_stop_scan">Escaneo terminado</string>
+    <string name="bluetooth_disconnection_ok">Desconectado del dispositivo</string>
+    <string name="bluetooth_disconnection_ko">No se ha podido desconectar</string>
+    <string name="action_back">Atrás</string>
+    <string name="connection_action_connect">Conectando</string>
+    <string name="connection_action_stoped">Conexión interrumpida</string>
+    <string name="driving_mode_joystick_vert">Joystick (Vertical)</string>
+    <string name="driving_mode_joystick_hor">Joystick (Horizontal)</string>
+    <string name="driving_mode_device_rotation">Rotación dispositivo</string>
+    <string name="driving_speed_slowest">Bus</string>
+    <string name="driving_speed_slow">Lento</string>
+    <string name="driving_speed_normal">Normal</string>
+    <string name="driving_speed_fast">Rápido</string>
+    <string name="connection_action_disconnect">Desconectando</string>
+    <string name="action_done">Hecho</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="hint_input_filter">Introduce un texto</string>
+    <string name="action_options">Opciones</string>
+    <string name="options_previous_devices">Dispositivos previamente emparejados</string>
+    <string name="options_recent_devices">Dispositivos recientes</string>
+    <string name="device_default_name">Nombre dispositivo</string>
+    <string name="device_default_address">Direcció dispositivo</string>
+    <string name="filter_popup_title">Filtrar por nombre</string>
+    <string name="options_no_devices_found">Ningun dispositivo encontrado</string>
+    <string name="connection_confirmation">Confirma conexión con:</string>
+    <string name="preferences_device_label">Dispositivo:</string>
+
+
+</resources>
