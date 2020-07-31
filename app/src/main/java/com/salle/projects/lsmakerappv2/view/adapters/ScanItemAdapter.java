@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
 import com.salle.projects.lsmakerappv2.R;
 import com.salle.projects.lsmakerappv2.model.BtDevice;
 import com.salle.projects.lsmakerappv2.view.callbacks.ListItemCallback;
@@ -53,9 +54,10 @@ implements AdapterView.OnItemClickListener {
                 @Override
                 public void onClick(View view) {
                     BtDevice device = mDevices.get(position);
-                    mCallback.onItemClick(device);
+                    mCallback.onItemClick(device, position);
                 }
             });
+            /*
             if (currentItem == position) {
                 Drawable d;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -73,6 +75,13 @@ implements AdapterView.OnItemClickListener {
                 }
                 holder.itemView.setBackground(d);
             }
+            */
+            if (mDevices.get(position).isConnected()) {
+                holder.tvState.setVisibility(View.VISIBLE);
+            } else {
+                holder.tvState.setVisibility(View.GONE);
+            }
+
             holder.tvAddress.setText(mDevices.get(position).getAddress());
             byte rssival = mDevices.get(position).getRssiValue().byteValue();
             if (rssival != 0) {
@@ -90,18 +99,20 @@ implements AdapterView.OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         BtDevice device = mDevices.get(position);
-        mCallback.onItemClick(device);
+        mCallback.onItemClick(device, position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvName, tvAddress, tvRssi;
+        Chip tvState;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.item_device_name);
             tvAddress = (TextView) itemView.findViewById(R.id.item_device_address);
             tvRssi = (TextView) itemView.findViewById(R.id.item_device_rssi);
+            tvState = (Chip) itemView.findViewById(R.id.item_device_state);
         }
     }
 }

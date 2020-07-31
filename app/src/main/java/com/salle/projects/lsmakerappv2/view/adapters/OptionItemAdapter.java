@@ -50,7 +50,7 @@ public class OptionItemAdapter extends RecyclerView.Adapter<OptionItemAdapter.Vi
             holder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCallback.onItemClick(mDevices.get(position));
+                    mCallback.onItemClick(mDevices.get(position), position);
                 }
             });
         }

@@ -32,4 +32,13 @@
         android:textSize="12sp"
         android:textColor="@color/colorPrimaryDark" />
 
+    <com.google.android.material.chip.Chip
+        android:id="@+id/item_device_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:backgroundTint="@color/colorConnected"
+        android:text="@string/connection_state_connected"/>
+
+
 </LinearLayout>
