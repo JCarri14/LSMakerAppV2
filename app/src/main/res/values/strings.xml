@@ -10,6 +10,7 @@
     <string name="connection_action_connect">Connecting...</string>
     <string name="connection_action_disconnect">Disconnecting...</string>
     <string name="connection_action_stoped">Connection stopped</string>
+    <string name="connection_confirmation">Confirm connection with:</string>
 
     <!-- Hints -->
     <string name="hint_device_name">Device\'s name</string>
@@ -86,6 +87,7 @@
     <string name="preferences_theme_title">Driving theme</string>
     <string name="preferences_theme_picker_title">Choose driving theme</string>
 
+    <string name="preferences_device_label">Device:</string>
     <string name="preferences_device_name_title">Device\'s name:</string>
     <string name="preferences_device_address_title">Device\'s address:</string>
 

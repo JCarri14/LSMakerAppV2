@@ -94,5 +94,7 @@
     <string name="device_default_name">Nom dispositiu</string>
     <string name="device_default_address">Adreça dispositiu</string>
     <string name="options_no_devices_found">Cap dispositiu trobat</string>
+    <string name="connection_confirmation">Confirma connexió amb:</string>
+    <string name="preferences_device_label">Dispositiu:</string>
 
 </resources>

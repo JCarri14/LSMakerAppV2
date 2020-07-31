@@ -96,6 +96,8 @@
     <string name="device_default_address">Direcció dispositivo</string>
     <string name="filter_popup_title">Filtrar por nombre</string>
     <string name="options_no_devices_found">Ningun dispositivo encontrado</string>
+    <string name="connection_confirmation">Confirma conexión con:</string>
+    <string name="preferences_device_label">Dispositivo:</string>
 
 
 </resources>
