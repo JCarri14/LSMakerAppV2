@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,12 @@ public class OptionItemAdapter extends RecyclerView.Adapter<OptionItemAdapter.Vi
         if (mDevices.get(position) != null) {
             holder.tvName.setText(mDevices.get(position).getName());
             holder.tvAddress.setText(mDevices.get(position).getAddress());
+            holder.ivDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCallback.onDeleteItem(mDevices.get(position));
+                }
+            });
             holder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -57,12 +64,14 @@ public class OptionItemAdapter extends RecyclerView.Adapter<OptionItemAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvName, tvAddress;
+        ImageView ivDelete;
         ConstraintLayout layout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.item_device_alt_name);
             tvAddress = (TextView) itemView.findViewById(R.id.item_device_alt_address);
+            ivDelete = (ImageView) itemView.findViewById(R.id.item_device_alt_del);
             layout = itemView.findViewById(R.id.item_device_alt_layout);
         }
     }

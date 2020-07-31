@@ -52,14 +52,8 @@ implements AdapterView.OnItemClickListener {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (position != currentItem) {
-                        currentItem = position;
-                        BtDevice device = mDevices.get(position);
-                        mCallback.onItemClick(device);
-                    } else {
-                        currentItem = -1;
-                    }
-                    notifyDataSetChanged();
+                    BtDevice device = mDevices.get(position);
+                    mCallback.onItemClick(device);
                 }
             });
             if (currentItem == position) {
