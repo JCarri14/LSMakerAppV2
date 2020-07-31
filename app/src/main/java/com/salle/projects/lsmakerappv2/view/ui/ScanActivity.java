@@ -74,6 +74,7 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
     private BluetoothService mBluetoothService;
     private BluetoothConnectionTask mAuthTask = null;
     private BtDevice mSelectedDevice;
+    private int mSelectedDeviceIndex;
     private boolean doConfig = true;
 
     // IntentFilter to configure the broadcast receiver
@@ -118,12 +119,13 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
         loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION, REQUEST_FINE_LOCATION);
         mBluetoothService = BluetoothService.getInstance();
         initViews();
-        initViewModel();
+        //initViewModel();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        initViewModel();
         bluetoothCompatibility();
         if (doConfig) bluetoothConfiguration();
     }
@@ -184,12 +186,16 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
 
         btnDisconnect = (Button) findViewById(R.id.act_scan_disconnect_btn);
         // Check if we are already connected to a device
+        if(mBluetoothService.getDevice() != null) {
+            btnDisconnect.setVisibility(View.VISIBLE);
+        }
         btnDisconnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mBluetoothService.getDevice() != null) {
                     btnDisconnect.setVisibility(View.GONE);
                     displayConnectDialog(false);
+                    mViewModel.setDeviceConnectedIndex(-1);
                     mBluetoothService.disconnect();
                     mBluetoothService.setDevice(null);
                     mConnectDialog.dismiss();
@@ -219,10 +225,12 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
         if (mViewModel == null) {
             mViewModel = new ViewModelProvider(ScanActivity.this).get(ScanViewModel.class);
         }
+        mViewModel.updateStates();
         mViewModel.getBluetoothDevices().observe(this, btDevices -> {
             if (mRecyclerView == null) {
                 mRecyclerView = findViewById(R.id.act_scan_recyclerView);
             }
+
             mItemAdapter = new ScanItemAdapter(ScanActivity.this, ScanActivity.this, btDevices);
             mRecyclerView.setAdapter(mItemAdapter);
 
@@ -437,12 +445,13 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
 
     /*****************************************************************************
      * ******************************  POPUPS  *********************************/
-    private void showConnectionConfirmationPopUp(String deviceName) {
+    private void showConnectionConfirmationPopUp(String deviceName, int deviceIndex) {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.connection_confirmation))
                 .setMessage(deviceName)
                 .setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        mViewModel.setDeviceConnectedIndex(deviceIndex);
                         doConnectionAction();
                     }
                 })
@@ -553,15 +562,13 @@ public class ScanActivity extends AppCompatActivity implements ListItemCallback 
 
     /*****************************************************************************
      * **************************  LIST ITEM CALLBACK  **************************/
-     @Override
-    public void onItemClick(int index) {
-
-    }
-
     @Override
-    public void onItemClick(Object obj) {
+    public void onItemClick(Object obj, int index) {
         mSelectedDevice = (BtDevice) obj;
-        showConnectionConfirmationPopUp(mSelectedDevice.getName());
+        if (mBluetoothService.getDevice() == null || (mBluetoothService.getDevice() != null &&
+                !mSelectedDevice.getName().equals(mBluetoothService.getDevice().getName())) ) {
+            showConnectionConfirmationPopUp(mSelectedDevice.getName(), index);
+        }
     }
     @Override
     public void onDeleteItem(Object obj) {

@@ -1,7 +1,9 @@
 package com.salle.projects.lsmakerappv2.viewmodel;
 
 import android.bluetooth.BluetoothDevice;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -14,6 +16,7 @@ import com.salle.projects.lsmakerappv2.utils.BluetoothDeviceComparator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ScanViewModel extends ViewModel implements BtDiscoveryCallback {
@@ -23,6 +26,7 @@ public class ScanViewModel extends ViewModel implements BtDiscoveryCallback {
     private MutableLiveData<List<BtDevice>> mDevices;
     private List<BtDevice> mAllDevices;
     private String filter = DEFAULT_FILTER_VALUE;
+    private static int connectedDeviceIndex = -1;
 
 
     public void requestBluetoothScan() {}
@@ -32,6 +36,7 @@ public class ScanViewModel extends ViewModel implements BtDiscoveryCallback {
             mDevices = new MutableLiveData<List<BtDevice>>();
             mDevices.setValue(new ArrayList<>());
         }
+        updateStates();
         return mDevices;
     }
 
@@ -61,7 +66,7 @@ public class ScanViewModel extends ViewModel implements BtDiscoveryCallback {
                 updateObservableList();
             }
         }
-
+        updateStates();
     }
 
     private void updateObservableListWithSingleItem(BtDevice device) {
@@ -96,6 +101,18 @@ public class ScanViewModel extends ViewModel implements BtDiscoveryCallback {
         }
     }
 
+    public void updateStates() {
+        if (mAllDevices != null) {
+            for (BtDevice d : mAllDevices) {
+                d.setConnected(false);
+            }
+            if (connectedDeviceIndex >= 0 && mAllDevices.size() > 0) {
+                mAllDevices.get(connectedDeviceIndex).setConnected(true);
+            }
+        }
+        updateObservableList();
+    }
+
     public String getFilter() {
         return filter;
     }
@@ -103,6 +120,11 @@ public class ScanViewModel extends ViewModel implements BtDiscoveryCallback {
     public void setFilter(String newFilter) {
         this.filter = newFilter;
         updateObservableList();
+    }
+
+    public void setDeviceConnectedIndex(int index) {
+        connectedDeviceIndex = index;
+        updateStates();
     }
 
 }
